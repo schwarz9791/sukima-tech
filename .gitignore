@@ -79,3 +79,9 @@ dist
 
 # IDE
 .idea
+
+# firebase
+.firebase
+
+# vscode
+.vscode
