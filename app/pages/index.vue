@@ -3,10 +3,11 @@
     <div>
       <logo/>
       <h1 class="title">
-        sukima-tech
+        SUKIMA TECHNOLOGY
       </h1>
       <h2 class="subtitle">
-        official web site.
+        ヒトとヒト、モノとモノ、ヒトとモノ<br>
+        スキマを繋ぐ技術
       </h2>
       <div class="description">
         Now constructing...
@@ -48,15 +49,16 @@ export default {
   font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   display: block;
-  font-weight: 300;
-  font-size: 100px;
+  font-weight: 500;
+  font-size: 36px;
   color: #35495e;
   letter-spacing: 1px;
+  line-height: 1.75;
 }
 
 .subtitle {
   font-weight: 300;
-  font-size: 42px;
+  font-size: 24px;
   color: #526488;
   word-spacing: 5px;
   padding-bottom: 15px;
