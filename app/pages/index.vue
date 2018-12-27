@@ -6,8 +6,11 @@
         sukima-tech
       </h1>
       <h2 class="subtitle">
-        Sukima Tech official web site.
+        official web site.
       </h2>
+      <div class="description">
+        Now constructing...
+      </div>
       <div class="links">
         <a
           href="https://nuxtjs.org/"
@@ -33,7 +36,6 @@ export default {
 </script>
 
 <style>
-
 .container {
   min-height: 100vh;
   display: flex;
@@ -55,6 +57,14 @@ export default {
 .subtitle {
   font-weight: 300;
   font-size: 42px;
+  color: #526488;
+  word-spacing: 5px;
+  padding-bottom: 15px;
+}
+
+.description {
+  font-weight: 300;
+  font-size: 18px;
   color: #526488;
   word-spacing: 5px;
   padding-bottom: 15px;
