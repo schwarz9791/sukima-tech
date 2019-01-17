@@ -34,7 +34,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    '@/plugins/firebase'
   ],
 
   /*
@@ -49,7 +50,7 @@ module.exports = {
   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
-    baseURL: 'https://sukima-tech.firebaseio.com'
+    baseURL: 'https://stg-sukima-tech.firebaseio.com'
   },
 
   /*

@@ -1,0 +1,34 @@
+/**
+ * @description
+ - Actions
+ */
+/*--- Global ---*/
+export const ACTION_GLOBAL_AJAX_CALL = 'ACTION_GLOBAL_AJAX_CALL'
+
+export const ACTION_GLOBAL_AJAX_CALL_SUCCEEDED =
+  'ACTION_GLOBAL_AJAX_CALL_SUCCEEDED'
+
+export const ACTION_GLOBAL_AJAX_CALL_FAILED = 'ACTION_GLOBAL_AJAX_CALL_FAILED'
+export const ACTION_SET_USER = 'ACTION_SET_USER'
+
+/**
+ * @description
+ - Mutations
+ */
+/*--- Global ---*/
+export const MUTATE_GLOBAL_AJAX_CALL = 'MUTATE_GLOBAL_AJAX_CALL'
+
+export const MUTATE_GLOBAL_AJAX_CALL_SUCCEEDED =
+  'MUTATE_GLOBAL_AJAX_CALL_SUCCEEDED'
+
+export const MUTATE_GLOBAL_AJAX_CALL_FAILED = 'MUTATE_GLOBAL_AJAX_CALL_FAILED'
+export const MUTATE_SET_USER = 'MUTATE_SET_USER'
+
+/**
+ * @description
+ - Getters
+ */
+/*--- Global ---*/
+export const GETTER_AJAX_CALL_COUNT = 'GETTER_AJAX_CALL_COUNT'
+export const GETTER_AUTH_USER = 'GETTER_AUTH_USER'
+export const GETTER_IS_AUTHENTICATED = 'GETTER_IS_AUTHENTICATED'
