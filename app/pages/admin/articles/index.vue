@@ -1,4 +1,6 @@
 <template lang="pug">
-  div
-    p article list
+  section
+    h3 article list
+    br
+    nuxt-link(to="/admin/login") Go admin top
 </template>

@@ -1,7 +1,15 @@
 <template lang="pug">
-  div
+  section(
+    v-loading.fullscreen.lock='isLoading'
+    element-loading-text='Loading...'
+  )
     template(v-if='isLoggedIn')
-      p logged in
+      h3 Welcome!! {{ user.displayName }}
+      ul
+        li
+          nuxt-link(to='/admin/categories') Go to category list
+        li
+          nuxt-link(to='/admin/articles') Go to article list
       button(@click='logout') Sign out
     template(v-else)
       p login
@@ -9,16 +17,23 @@
 </template>
 
 <script>
-import firebase from '@/plugins/firebase'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import {
   GETTER_AUTH_USER,
   GETTER_IS_AUTHENTICATED,
-  ACTION_SET_USER
+  ACTION_SET_USER,
+  ACTION_AUTH_LOGIN,
+  ACTION_AUTH_LOGOUT,
+  ACTION_GET_REDIRECT_RESULT
 } from '@/store/types'
 
 export default {
   name: 'LoginPage',
+  asyncData() {
+    return {
+      isLoading: true
+    }
+  },
   computed: {
     ...mapState(['user']),
     ...mapGetters({
@@ -26,36 +41,27 @@ export default {
     })
   },
   mounted() {
-    firebase.auth().onAuthStateChanged(user => {
-      this.setUser(user)
-    })
+    this.getRedurectResult()
+      .then(() => {
+        this.isLoading = false
+      })
+      .catch(error => {
+        console.info(error.message)
+        this.isLoading = false
+      })
   },
   methods: {
     ...mapActions({
-      setUser: ACTION_SET_USER
+      setUser: ACTION_SET_USER,
+      authLogin: ACTION_AUTH_LOGIN,
+      authLogout: ACTION_AUTH_LOGOUT,
+      getRedurectResult: ACTION_GET_REDIRECT_RESULT
     }),
     login() {
-      const provider = new firebase.auth.GoogleAuthProvider()
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(user => {
-          this.$router.push('/admin/categories')
-        })
-        .catch(error => {
-          alert(error)
-        })
+      this.authLogin()
     },
     logout() {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          this.setUser(null)
-        })
-        .catch(error => {
-          alert(error)
-        })
+      this.authLogout()
     }
   }
 }
