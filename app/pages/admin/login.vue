@@ -3,7 +3,7 @@
     v-loading.fullscreen.lock='isLoading'
     element-loading-text='Loading...'
   )
-    template(v-if='isLoggedIn')
+    template(v-if='!!user')
       h3 Welcome!! {{ user.displayName }}
       ul
         li
@@ -17,31 +17,20 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex'
-import {
-  GETTER_AUTH_USER,
-  GETTER_IS_AUTHENTICATED,
-  ACTION_SET_USER,
-  ACTION_AUTH_LOGIN,
-  ACTION_AUTH_LOGOUT,
-  ACTION_GET_REDIRECT_RESULT
-} from '@/store/types'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'LoginPage',
-  asyncData() {
+  data() {
     return {
       isLoading: true
     }
   },
   computed: {
-    ...mapState(['user']),
-    ...mapGetters({
-      isLoggedIn: GETTER_IS_AUTHENTICATED
-    })
+    ...mapState('user', ['user'])
   },
   mounted() {
-    this.getRedurectResult()
+    this.getRedirectResult()
       .then(() => {
         this.isLoading = false
       })
@@ -51,18 +40,7 @@ export default {
       })
   },
   methods: {
-    ...mapActions({
-      setUser: ACTION_SET_USER,
-      authLogin: ACTION_AUTH_LOGIN,
-      authLogout: ACTION_AUTH_LOGOUT,
-      getRedurectResult: ACTION_GET_REDIRECT_RESULT
-    }),
-    login() {
-      this.authLogin()
-    },
-    logout() {
-      this.authLogout()
-    }
+    ...mapActions('auth', ['login', 'logout', 'getRedirectResult'])
   }
 }
 </script>
