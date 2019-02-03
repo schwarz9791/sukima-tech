@@ -1,4 +1,6 @@
 const pkg = require('./package')
+const environment = process.env.NODE_ENV || 'development'
+const env = require(`./config/env.${environment}.js`)
 
 module.exports = {
   mode: 'universal',
@@ -13,9 +15,7 @@ module.exports = {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: pkg.description }
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
 
   /*
@@ -26,22 +26,18 @@ module.exports = {
   /*
   ** Global CSS
   */
-  css: [
-    'element-ui/lib/theme-chalk/index.css'
-  ],
+  css: ['element-ui/lib/theme-chalk/index.css'],
 
   /*
   ** Plugins to load before mounting the App
   */
-  plugins: [
-    '@/plugins/element-ui',
-    '@/plugins/firebase'
-  ],
+  plugins: ['@/plugins/element-ui', '@/plugins/firebase'],
 
   /*
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/dotenv',
     // Doc: https://github.com/nuxt-community/axios-module#usage
     '@nuxtjs/axios'
   ],
@@ -50,7 +46,7 @@ module.exports = {
   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
-    baseURL: 'https://stg-sukima-tech.firebaseio.com'
+    baseURL: process.env.BASE_URL || 'https://stg-sukima-tech.firebaseio.com'
   },
 
   /*
@@ -71,5 +67,6 @@ module.exports = {
         })
       }
     }
-  }
+  },
+  env: env
 }
