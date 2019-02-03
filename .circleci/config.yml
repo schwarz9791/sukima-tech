@@ -10,7 +10,7 @@ default: &default
 
 jobs:
   install:
-    <<: *defaults
+    <<: *default
     steps:
       - checkout
       # Download and cache dependencies
@@ -32,7 +32,7 @@ jobs:
             - ./*
 
   # test:
-  #   <<: *defaults
+  #   <<: *default
   #   - attach_workspace:
   #       at: ~/repo
 
@@ -41,7 +41,7 @@ jobs:
   #   - run: yarn test
 
   deploy-staging:
-    <<: *defaults
+    <<: *default
     - attach_workspace:
         at: ~/repo
     steps:
@@ -56,7 +56,7 @@ jobs:
           command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN
 
   deploy-production:
-    <<: *defaults
+    <<: *default
     - attach_workspace:
         at: ~/repo
     steps:
