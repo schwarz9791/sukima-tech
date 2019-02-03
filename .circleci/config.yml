@@ -33,18 +33,18 @@ jobs:
 
   # test:
   #   <<: *default
-  #   - attach_workspace:
-  #       at: ~/repo
 
   # steps:
+  #   - attach_workspace:
+  #       at: ~/repo
   # run tests!
   #   - run: yarn test
 
   deploy-staging:
     <<: *default
-    - attach_workspace:
-        at: ~/repo
     steps:
+      - attach_workspace:
+          at: ~/repo
       - run:
           name: Generate Nuxt app
           command: yarn generate
@@ -57,9 +57,9 @@ jobs:
 
   deploy-production:
     <<: *default
-    - attach_workspace:
-        at: ~/repo
     steps:
+      - attach_workspace:
+          at: ~/repo
       - run:
           name: Generate Nuxt app
           command: yarn generate:prod
