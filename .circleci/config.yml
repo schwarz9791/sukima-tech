@@ -3,15 +3,16 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2
-jobs:
-  build:
-    docker:
-      - image: circleci/node:10.12.0-stretch-browsers-legacy
-    working_directory: ~/repo
+default: &default
+  docker:
+    - image: circleci/node:10.12.0-stretch-browsers-legacy
+  working_directory: ~/repo
 
+jobs:
+  install:
+    <<: *defaults
     steps:
       - checkout
-
       # Download and cache dependencies
       - restore_cache:
           name: Restore Yarn Package Cache
@@ -25,21 +26,24 @@ jobs:
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - ./*
 
   # test:
-  #   docker:
-  #     - image: circleci/node:10.12.0-stretch-browsers-legacy
-  #   working_directory: ~/repo
+  #   <<: *defaults
+  #   - attach_workspace:
+  #       at: ~/repo
 
-  #   steps:
+  # steps:
   # run tests!
-  # - run: yarn test
+  #   - run: yarn test
 
   deploy-staging:
-    docker:
-      - image: circleci/node:10.12.0-stretch-browsers-legacy
-    working_directory: ~/repo
-
+    <<: *defaults
+    - attach_workspace:
+        at: ~/repo
     steps:
       - run:
           name: Generate Nuxt app
@@ -52,10 +56,9 @@ jobs:
           command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN
 
   deploy-production:
-    docker:
-      - image: circleci/node:10.12.0-stretch-browsers-legacy
-    working_directory: ~/repo
-
+    <<: *defaults
+    - attach_workspace:
+        at: ~/repo
     steps:
       - run:
           name: Generate Nuxt app
@@ -73,19 +76,19 @@ workflows:
   version: 2
   build-deploy:
     jobs:
-      - build
+      - install
       # - test:
       #     requires:
       #       - build
       - deploy-staging:
           requires:
-            - build
+            - install
           filters:
             branches:
               only: staging
       - deploy-production:
           requires:
-            - build
+            - install
           filters:
             branches:
               only: master
