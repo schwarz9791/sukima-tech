@@ -1,132 +1,77 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
 version: 2
-default: &default
+
+defaults: &defaults
+  working_directory: ~/repo
   docker:
     - image: circleci/node:10.12.0-stretch-browsers-legacy
-  working_directory: ~/repo
+
+filter_only_master: &filter_only_master
+  filters:
+    branches:
+      only: master
 
 jobs:
   setup:
-    <<: *default
+    <<: *defaults
     steps:
       - checkout
-      # Download and cache dependencies
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
-      - run:
-          name: Install Dependencies
-          command: yarn install --frozen-lockfile
-      - run:
-          name: Install Firebase tools
-          command: npm install --save-dev firebase-tools
-      - run:
-          command: ln -s ./node_modules/firebase-tools/bin/firebase .
+      - run: yarn install
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
-            - node_modules
       - persist_to_workspace:
           root: ~/repo
           paths:
             - ./*
 
-  # test:
-  #   <<: *default
-
-  # steps:
-  #   - attach_workspace:
-  #       at: ~/repo
-  # run tests!
-  #   - run: yarn test
-
-  build-staging:
-    <<: *default
+  test:
+    <<: *defaults
     steps:
       - attach_workspace:
           at: ~/repo
-      - run:
-          name: Generate Nuxt app
-          command: yarn generate
+      - run: yarn test
+
+  build:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run: yarn generate
       - persist_to_workspace:
           root: ~/repo
           paths:
             - dist
 
-  build-production:
-    <<: *default
+  deploy:
+    <<: *defaults
     steps:
       - attach_workspace:
           at: ~/repo
-      - run:
-          name: Generate Nuxt app
-          command: yarn generate:prod
-      - persist_to_workspace:
-          root: ~/repo
-          paths:
-            - dist
-
-  deploy-staging:
-    <<: *default
-    steps:
-      - attach_workspace:
-          at: ~/repo
-      - run:
-          name: Use staging to Firebase
-          command: ./firebase use stg
-      - run:
-          name: Deploy Staging to Firebase
-          command: ./firebase deploy --only hosting --project "$FIREBASE_STG_PROJECT_ID" --token "$FIREBASE_STG_TOKEN"
-
-  deploy-production:
-    <<: *default
-    steps:
-      - attach_workspace:
-          at: ~/repo
-      - run:
-          name: Use production to Firebase
-          command: ./firebase use prod
-      - run:
-          name: Deploy Production to Firebase
-          command: ./firebase deploy --only hosting --project "$FIREBASE_PROJECT_ID" --token "$FIREBASE_TOKEN"
+      - run: ./firebase use stg
+      - run: ./firebase deploy --only hosting --project "$FIREBASE_STG_PROJECT_ID" --token "$FIREBASE_STG_TOKEN"
 
 workflows:
   version: 2
-  build-deploy:
+  test-deploy:
     jobs:
       - setup
-      # - test:
-      #     requires:
-      #       - setup
-      - build-staging:
+      - test:
           requires:
             - setup
-          filters:
-            branches:
-              only: staging
-      - deploy-staging:
+      - build:
+          <<: *filter_only_master
           requires:
             - setup
-            - build-staging
-          filters:
-            branches:
-              only: staging
-      - build-production:
+            - test
+      - deploy:
+          <<: *filter_only_master
           requires:
             - setup
-          filters:
-            branches:
-              only: master
-      - deploy-production:
-          requires:
-            - setup
-            - build-production
-          filters:
-            branches:
-              only: master
+            - test
+            - build
