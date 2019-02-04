@@ -23,7 +23,9 @@ jobs:
           command: yarn install --frozen-lockfile
       - run:
           name: Install Firebase tools
-          command: npm i -g firebase-tools
+          command: npm install --save-dev firebase-tools
+      - run:
+          command: ln -s ./node_modules/firebase-tools/bin/firebase .
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
@@ -53,10 +55,10 @@ jobs:
           command: yarn generate
       - run:
           name: Use staging to Firebase
-          command: ./node_modules/.bin/firebase use stg
+          command: ./firebase use stg
       - run:
           name: Deploy Staging to Firebase
-          command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN
+          command: ./firebase deploy --only hosting --project "$FIREBASE_PROJECT_ID" --token "$FIREBASE_TOKEN"
 
   deploy-production:
     <<: *default
@@ -69,11 +71,11 @@ jobs:
 
       - run:
           name: Use production to Firebase
-          command: ./node_modules/.bin/firebase use prod
+          command: ./firebase use prod
 
       - run:
           name: Deploy Production to Firebase
-          command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN
+          command: ./firebase deploy --only hosting --project "$FIREBASE_PROJECT_ID" --token "$FIREBASE_TOKEN"
 
 workflows:
   version: 2
