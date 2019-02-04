@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "sukima-tech"
+    "default": "stg-sukima-tech",
+    "stg": "stg-sukima-tech",
+    "prod": "sukima-tech"
   }
 }

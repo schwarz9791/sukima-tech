@@ -58,7 +58,7 @@ jobs:
           command: ./firebase use stg
       - run:
           name: Deploy Staging to Firebase
-          command: ./firebase deploy --only hosting --project "$FIREBASE_PROJECT_ID" --token "$FIREBASE_TOKEN"
+          command: ./firebase deploy --only hosting --project "$FIREBASE_STG_PROJECT_ID" --token "$FIREBASE_STG_TOKEN"
 
   deploy-production:
     <<: *default
