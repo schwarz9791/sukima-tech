@@ -61,17 +61,17 @@ workflows:
   test-deploy:
     jobs:
       - setup
-      - test:
-          requires:
-            - setup
+      # - test:
+      #     requires:
+      #       - setup
       - build:
           <<: *filter_only_master
           requires:
             - setup
-            - test
+            # - test
       - deploy:
           <<: *filter_only_master
           requires:
             - setup
-            - test
+            # - test
             - build
