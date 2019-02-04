@@ -21,7 +21,6 @@ jobs:
             - yarn-packages-{{ checksum "yarn.lock" }}
       - run: yarn install
       - run: yarn add --dev firebase-tools
-      - run: ln -s ./node_modules/firebase-tools/bin/firebase .
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
@@ -55,6 +54,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
+      - run: ln -s ./node_modules/firebase-tools/bin/firebase .
       - run: ./firebase use stg
       - run: ./firebase deploy --only hosting --project "$FIREBASE_STG_PROJECT_ID" --token "$FIREBASE_STG_TOKEN"
 
