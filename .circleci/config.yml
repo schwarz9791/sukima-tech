@@ -47,7 +47,7 @@ jobs:
   #   - run: yarn test
 
   build-staging:
-    <<: *defaults
+    <<: *default
     steps:
       - attach_workspace:
           at: ~/repo
@@ -60,7 +60,7 @@ jobs:
             - dist
 
   build-production:
-    <<: *defaults
+    <<: *default
     steps:
       - attach_workspace:
           at: ~/repo
