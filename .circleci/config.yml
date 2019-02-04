@@ -30,12 +30,12 @@ jobs:
           paths:
             - ./*
 
-  test:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/repo
-      - run: yarn test
+  # test:
+  #   <<: *defaults
+  #   steps:
+  #     - attach_workspace:
+  #         at: ~/repo
+  #     - run: yarn test
 
   build:
     <<: *defaults
