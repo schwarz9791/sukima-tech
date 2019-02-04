@@ -54,7 +54,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
-      - run: ln -s ./node_modules/firebase-tools/bin/firebase .
+      - run: ln -s ./node_modules/.bin/firebase .
       - run: ./firebase use stg
       - run: ./firebase deploy --only hosting --project "$FIREBASE_STG_PROJECT_ID" --token "$FIREBASE_STG_TOKEN"
 
