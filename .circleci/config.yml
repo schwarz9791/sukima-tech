@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 
 defaults: &defaults
   working_directory: ~/repo
@@ -9,6 +9,11 @@ filter_only_staging: &filter_only_staging
   filters:
     branches:
       only: staging
+
+filter_only_staging: &filter_only_production
+  filters:
+    branches:
+      only: production
 
 jobs:
   setup:
@@ -21,6 +26,7 @@ jobs:
             - yarn-packages-{{ checksum "yarn.lock" }}
       - run: yarn install
       - run: yarn add --dev firebase-tools
+      - run: ln -s ./node_modules/.bin/firebase .
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
@@ -38,7 +44,7 @@ jobs:
   #         at: ~/repo
   #     - run: yarn test
 
-  build:
+  build-stg:
     <<: *defaults
     steps:
       - attach_workspace:
@@ -49,31 +55,60 @@ jobs:
           paths:
             - dist
 
-  deploy:
+  build-prod:
     <<: *defaults
     steps:
       - attach_workspace:
           at: ~/repo
-      - run: ln -s ./node_modules/.bin/firebase .
+      - run: yarn generate:prod
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - dist
+
+  deploy-stg:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
       - run: ./firebase use stg
       - run: ./firebase deploy --only hosting --project "$FIREBASE_STG_PROJECT_ID" --token "$FIREBASE_STG_TOKEN"
 
+  deploy-prod:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run: ./firebase use prod
+      - run: ./firebase deploy --only hosting --project "$FIREBASE_PROJECT_ID" --token "$FIREBASE_TOKEN"
+
 workflows:
-  version: 2
+  version: 2.1
   test-deploy:
     jobs:
       - setup
       # - test:
       #     requires:
       #       - setup
-      - build:
+      - build-stg:
           <<: *filter_only_staging
           requires:
             - setup
             # - test
-      - deploy:
+      - build-prod:
+          <<: *filter_only_production
+          requires:
+            - setup
+            # - test
+      - deploy-stg:
           <<: *filter_only_staging
           requires:
             - setup
             # - test
-            - build
+            - build-stg
+      - deploy-prod:
+          <<: *filter_only_production
+          requires:
+            - setup
+            # - test
+            - build-prod
