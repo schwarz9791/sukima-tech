@@ -1,5 +1,7 @@
 import firebase from '@/plugins/firebase'
 
+const db = firebase.firestore()
+
 export const actions = {
   login() {
     const provider = new firebase.auth.GoogleAuthProvider()
