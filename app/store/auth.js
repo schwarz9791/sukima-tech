@@ -1,5 +1,6 @@
 import firebase from '@/plugins/firebase'
-import { mapActions } from 'vuex'
+
+const db = firebase.firestore()
 
 export const actions = {
   login() {
@@ -24,21 +25,15 @@ export const actions = {
       })
   },
   async getRedirectResult({ dispatch }, next) {
-    await firebase
-      .auth()
-      .getRedirectResult()
-      .then(result => {
-        if (result.credential) {
-          const token = result.credential.accessToken
-          dispatch('user/setToken', token, { root: true })
-        }
-        const user = result.user
-        if (!!user) {
-          dispatch('user/setUser', user, { root: true })
-          if (next) this.$router.push(next)
-        } else {
-          throw new Error('Not logged in.')
-        }
-      })
+    try {
+      await firebase
+        .auth()
+        .getRedirectResult()
+        .then(result => {
+          dispatch('user/setAuthorizedUser', { result, next }, { root: true })
+        })
+    } catch (error) {
+      console.error(error.message)
+    }
   }
 }
