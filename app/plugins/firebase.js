@@ -1,5 +1,6 @@
 import firebase from '@firebase/app'
 import '@firebase/auth'
+import '@firebase/firestore'
 
 if (!firebase.apps.length) {
   firebase.initializeApp({
@@ -10,6 +11,7 @@ if (!firebase.apps.length) {
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
   })
+  firebase.firestore().settings({ timestampsInSnapshots: true })
 }
 
 export default firebase
