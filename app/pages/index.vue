@@ -1,29 +1,15 @@
-<template>
-  <section class="container">
-    <div>
-      <logo/>
-      <h1 class="title">
-        SUKIMA TECHNOLOGY
-      </h1>
-      <h2 class="subtitle">
-        ヒトとヒト、モノとモノ、ヒトとモノ<br>
-        スキマを繋ぐ技術
-      </h2>
-      <div class="description">
-        Now constructing...
-      </div>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green">Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey">GitHub</a>
-      </div>
-    </div>
-  </section>
+<template lang="pug">
+  section.container
+    div
+      logo
+      h1.title
+        | SUKIMA TECHNOLOGY
+      h2.subtitle
+        | ヒトとヒト、モノとモノ、ヒトとモノ
+        br
+        | スキマを繋ぐ技術
+      .description
+        | Now constructing...
 </template>
 
 <script>

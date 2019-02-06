@@ -1,91 +1,114 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
-version: 2
-jobs:
-  build:
-    docker:
-      - image: circleci/node:10.12.0-stretch-browsers-legacy
-    working_directory: ~/repo
+version: 2.1
 
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:10.12.0-stretch-browsers-legacy
+
+filter_only_staging: &filter_only_staging
+  filters:
+    branches:
+      only: staging
+
+filter_only_production: &filter_only_production
+  filters:
+    branches:
+      only: production
+
+jobs:
+  setup:
+    <<: *defaults
     steps:
       - checkout
-
-      # Download and cache dependencies
       - restore_cache:
-        name: Restore Yarn Package Cache
-        keys:
-          - yarn-packages-{{ checksum "yarn.lock" }}
-      - run:
-        name: Install Dependencies
-        command: yarn install --frozen-lockfile
-
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run: yarn install
+      - run: yarn add --dev firebase-tools
+      - run: ln -s ./node_modules/.bin/firebase .
       - save_cache:
-        name: Save Yarn Package Cache
-        key: yarn-packages-{{ checksum "yarn.lock" }}
-        paths:
-          - ~/.cache/yarn
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - ./*
 
-  test:
-    docker:
-      - image: circleci/node:10.12.0-stretch-browsers-legacy
-    working_directory: ~/repo
+  # test:
+  #   <<: *defaults
+  #   steps:
+  #     - attach_workspace:
+  #         at: ~/repo
+  #     - run: yarn test
 
+  build-stg:
+    <<: *defaults
     steps:
-      # run tests!
-      # - run: yarn test
+      - attach_workspace:
+          at: ~/repo
+      - run: yarn generate
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - dist
 
-  deploy-staging:
-    docker:
-      - image: circleci/node:10.12.0-stretch-browsers-legacy
-    working_directory: ~/repo
-
+  build-prod:
+    <<: *defaults
     steps:
-      - run:
-        name: Generate Nuxt app
-        command: yarn generate
+      - attach_workspace:
+          at: ~/repo
+      - run: yarn generate:prod
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - dist
 
-      - run:
-        name: Deploy Master to Firebase
-        command: ./node_modules/.bin/firebase use stg
-        command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN
-
-  deploy-production:
-    docker:
-      - image: circleci/node:10.12.0-stretch-browsers-legacy
-    working_directory: ~/repo
-
+  deploy-stg:
+    <<: *defaults
     steps:
-      - run:
-        name: Generate Nuxt app
-        command: yarn generate:prod
+      - attach_workspace:
+          at: ~/repo
+      - run: ./firebase use stg
+      - run: ./firebase deploy --token "$FIREBASE_STG_TOKEN"
 
-      - run:
-        name: Deploy Master to Firebase
-        command: ./node_modules/.bin/firebase use prod
-        command: ./node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN
-
+  deploy-prod:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - run: ./firebase use prod
+      - run: ./firebase deploy --token "$FIREBASE_TOKEN"
 
 workflows:
-  version: 2
-  build-deploy:
+  version: 2.1
+  test-deploy:
     jobs:
-      - build
-      - test:
-        requires:
-          - build
-      - deploy-staging:
-        requires:
-          - test
-        filters:
-          branches:
-            only: staging
-      - deploy-production:
-        requires:
-          - test
-        filters:
-          branches:
-            only: master
-
-
+      - setup
+      # - test:
+      #     requires:
+      #       - setup
+      - build-stg:
+          <<: *filter_only_staging
+          requires:
+            - setup
+            # - test
+      - build-prod:
+          <<: *filter_only_production
+          requires:
+            - setup
+            # - test
+      - deploy-stg:
+          <<: *filter_only_staging
+          requires:
+            - setup
+            # - test
+            - build-stg
+      - deploy-prod:
+          <<: *filter_only_production
+          requires:
+            - setup
+            # - test
+            - build-prod
