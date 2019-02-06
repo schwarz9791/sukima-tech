@@ -10,7 +10,7 @@ filter_only_staging: &filter_only_staging
     branches:
       only: staging
 
-filter_only_staging: &filter_only_production
+filter_only_production: &filter_only_production
   filters:
     branches:
       only: production
