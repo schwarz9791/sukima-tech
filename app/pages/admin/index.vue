@@ -27,9 +27,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('user', ['user'])
+    ...mapState('users', ['user'])
   },
-  mounted() {
+  created() {
     this.getRedirectResult()
       .then(() => {
         this.isLoading = false

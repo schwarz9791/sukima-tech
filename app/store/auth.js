@@ -2,13 +2,18 @@ import firebase from '@/plugins/firebase'
 
 export const actions = {
   login() {
-    const provider = new firebase.auth.GoogleAuthProvider()
-    provider.setCustomParameters({ hd: 'sukima.tech' })
     firebase
       .auth()
-      .signInWithRedirect(provider)
-      .catch(error => {
-        alert(error)
+      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+      .then(() => {
+        const provider = new firebase.auth.GoogleAuthProvider()
+        provider.setCustomParameters({ hd: 'sukima.tech' })
+        firebase
+          .auth()
+          .signInWithRedirect(provider)
+          .catch(error => {
+            alert(error)
+          })
       })
   },
   logout({ dispatch }) {
@@ -16,7 +21,7 @@ export const actions = {
       .auth()
       .signOut()
       .then(() => {
-        dispatch('user/setUser', null, { root: true })
+        dispatch('users/user', null, { root: true })
       })
       .catch(error => {
         alert(error)
@@ -28,7 +33,7 @@ export const actions = {
         .auth()
         .getRedirectResult()
         .then(result => {
-          dispatch('user/setAuthorizedUser', { result, next }, { root: true })
+          dispatch('users/authorizedUser', { result, next }, { root: true })
         })
     } catch (error) {
       console.error(error.message)

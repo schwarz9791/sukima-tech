@@ -8,16 +8,16 @@ export const state = () => ({
 })
 
 export const getters = {
-  getUser(state) {
+  user(state) {
     return state.user
   },
-  getToken(state) {
+  token(state) {
     return state.token
   }
 }
 
 export const actions = {
-  async setUser({ commit }, payload) {
+  async user({ commit }, payload) {
     if (payload && payload.uid) {
       await db
         .collection('users')
@@ -30,19 +30,19 @@ export const actions = {
           photoURL: payload.photoURL
         })
         .then(() => {
-          commit('setUser', payload)
+          commit('user', payload)
         })
         .catch(error => {
           console.error('Error writing document: ', error)
         })
     } else {
-      commit('setUser', null)
+      commit('user', null)
     }
   },
-  setToken({ commit }, payload) {
-    commit('setToken', payload)
+  token({ commit }, payload) {
+    commit('token', payload)
   },
-  async setAuthorizedUser({ commit }, { result, next }) {
+  async authorizedUser({ commit }, { result, next }) {
     try {
       const user = result.user
       if (!!user && user.uid) {
@@ -53,8 +53,8 @@ export const actions = {
           .then(doc => {
             if (doc.exists) {
               const token = result.credential.accessToken
-              commit('setToken', token)
-              commit('setUser', user)
+              commit('token', token)
+              commit('user', user)
               if (next) this.$router.push(next)
             } else {
               throw new Error('Permission denied.')
@@ -68,7 +68,7 @@ export const actions = {
 }
 
 export const mutations = {
-  setUser(state, payload) {
+  user(state, payload) {
     if (!!payload && payload.uid) {
       state.user = {
         uid: payload.uid,
@@ -82,7 +82,7 @@ export const mutations = {
       state.user = null
     }
   },
-  setToken(state, payload) {
+  token(state, payload) {
     state.token = payload
   }
 }
