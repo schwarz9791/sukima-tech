@@ -3,7 +3,7 @@ const environment = process.env.NODE_ENV || 'development'
 const env = require(`./config/env.${environment}.js`)
 
 module.exports = {
-  mode: 'universal',
+  mode: 'spa',
   srcDir: 'app',
   /*
   ** Headers of the page
@@ -33,6 +33,12 @@ module.exports = {
   */
   plugins: ['@/plugins/element-ui', '@/plugins/firebase'],
 
+  /*
+  ** Nuxt.js middleware
+  */
+  router: {
+    middleware: 'authenticated'
+  },
   /*
   ** Nuxt.js modules
   */
