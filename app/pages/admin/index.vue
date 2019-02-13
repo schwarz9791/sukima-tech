@@ -30,7 +30,8 @@ export default {
     ...mapState('users', ['user'])
   },
   created() {
-    this.getRedirectResult()
+    const rd = this.$route.query.rd ? decodeURI(this.$route.query.rd) : null
+    this.getRedirectResult(rd)
       .then(() => {
         this.isLoading = false
       })

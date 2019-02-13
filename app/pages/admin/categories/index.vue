@@ -18,18 +18,14 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'CategoriesPage',
-  data() {
-    return {
-      isLoading: true
+  computed: {
+    ...mapState('categories', ['categories']),
+    isLoading() {
+      return !this.categories.length
     }
   },
-  computed: {
-    ...mapState('categories', ['categories'])
-  },
   created() {
-    this.bind().then(() => {
-      this.isLoading = false
-    })
+    this.bind()
   },
   destroyed() {
     this.unbind()
