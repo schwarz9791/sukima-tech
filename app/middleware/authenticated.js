@@ -5,6 +5,6 @@ export default function({ store, route, redirect }) {
     route.name.includes('admin')
   ) {
     alert('Please login.')
-    redirect('/admin')
+    redirect(`/admin?rd=${route.path}`)
   }
 }
