@@ -1,11 +1,13 @@
 import firebase from '@/plugins/firebase'
 import { firebaseAction } from 'vuexfire'
+import _ from 'lodash'
 
 const db = firebase.firestore()
 const articlesRef = db.collection('articles')
 
 export const state = () => ({
-  articles: []
+  articles: [],
+  article: {}
 })
 
 export const getters = {
@@ -20,5 +22,15 @@ export const actions = {
   }),
   unbind: firebaseAction(({ unbindFirebaseRef }) => {
     unbindFirebaseRef('articles')
+  }),
+  bindSingle: firebaseAction(({ bindFirebaseRef }, id) => {
+    bindFirebaseRef('article', articlesRef.doc(id))
+  }),
+  unbindSingle: firebaseAction(({ unbindFirebaseRef }) => {
+    unbindFirebaseRef('article')
+  }),
+  updateSingle: firebaseAction(({ state }, payload) => {
+    const data = _.merge({}, state.article, payload)
+    articlesRef.doc(state.article.id).set(data)
   })
 }
