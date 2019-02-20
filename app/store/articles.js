@@ -29,8 +29,13 @@ export const actions = {
   unbindSingle: firebaseAction(({ unbindFirebaseRef }) => {
     unbindFirebaseRef('article')
   }),
-  updateSingle: firebaseAction(({ state }, payload) => {
-    const data = _.merge({}, state.article, payload)
-    articlesRef.doc(state.article.id).set(data)
+  saveSingle: firebaseAction(({ state }) => {
+    articlesRef.doc(state.article._id).set(state.article)
   })
+}
+
+export const mutations = {
+  updateSingle(state, payload) {
+    state.article = _.merge({}, state.article, payload)
+  }
 }

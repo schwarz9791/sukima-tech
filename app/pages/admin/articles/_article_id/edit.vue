@@ -5,22 +5,31 @@
   )
     section
       p edit article - {{ articleId }}
-      el-form(v-if='!isLoading' ref='article' :model='article')
-        el-form-item(label='title')
-          el-input(v-model='title')
-        el-form-item(label='description')
-          el-input(v-model='description')
-        el-form-item(label='body')
-          el-input(v-model='body')
+      article-editor(
+        v-if='!isLoading'
+        :id='articleId'
+        :article='article'
+      )
+      el-button(@click='goBack()') Back
+      el-button(type='primary' @click='saveArticle()' :disabled='isSaving')
+        i.el-icon-loading(v-if='isSaving')
+        | Save
       br
       nuxt-link(to="/admin") Go admin top
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import ArticleEditor from '@/components/ArticleEditor.vue'
 
 export default {
   name: 'EditArticle',
+  components: { ArticleEditor },
+  data() {
+    return {
+      isSaving: false
+    }
+  },
   computed: {
     ...mapState('articles', ['article']),
     isLoading() {
@@ -28,46 +37,24 @@ export default {
     },
     articleId() {
       return this.$route.params.article_id
-    },
-    title: {
-      get() {
-        return this.article.title
-      },
-      set(value) {
-        this.updateSingle({
-          title: value
-        })
-      }
-    },
-    description: {
-      get() {
-        return this.article.description
-      },
-      set(value) {
-        this.updateSingle({
-          description: value
-        })
-      }
-    },
-    body: {
-      get() {
-        return this.article.body
-      },
-      set(value) {
-        this.updateSingle({
-          body: value
-        })
-      }
     }
   },
-  created() {
-    this.bindSingle(this.articleId)
+  async created() {
+    await this.bindSingle(this.articleId)
   },
   destroyed() {
     this.unbindSingle()
   },
   methods: {
-    ...mapActions('articles', ['bindSingle', 'unbindSingle', 'updateSingle'])
+    ...mapActions('articles', ['bindSingle', 'unbindSingle', 'saveSingle']),
+    goBack() {
+      this.$router.back()
+    },
+    async saveArticle() {
+      this.isSaving = true
+      await this.saveSingle()
+      this.isSaving = false
+    }
   }
 }
 </script>
