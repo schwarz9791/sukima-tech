@@ -5,22 +5,34 @@
   )
     section
       p edit category - {{ categoryId }}
-      el-form(v-if='!isLoading' ref='category' :model='category')
-        el-form-item(label='name')
-          el-input(v-model='name')
-        el-form-item(label='order')
-          el-input(v-model='order')
-        el-form-item(label='template')
-          el-input(v-model='template')
+      category-editor(
+        v-if='!isLoading'
+        :id='categoryId'
+        :category='category'
+      )
+      el-button(@click='goBack()') Back
+      el-button(type='danger' @click='deleteCategory()' :disabled='isSaving')
+        i.el-icon-loading(v-if='isSaving')
+        | Remove
+      el-button(type='primary' @click='saveCategory()' :disabled='isSaving')
+        i.el-icon-loading(v-if='isSaving')
+        | Update
       br
-      nuxt-link(to="/admin") Go admin top
+      nuxt-link(to='/admin') Go admin top
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
+import CategoryEditor from '@/components/CategoryEditor.vue'
 
 export default {
-  name: 'Editcategory',
+  name: 'EditCategory',
+  components: { CategoryEditor },
+  data() {
+    return {
+      isSaving: false
+    }
+  },
   computed: {
     ...mapState('categories', ['category']),
     isLoading() {
@@ -28,36 +40,6 @@ export default {
     },
     categoryId() {
       return this.$route.params.category_id
-    },
-    name: {
-      get() {
-        return this.category.name
-      },
-      set(value) {
-        this.updateSingle({
-          name: value
-        })
-      }
-    },
-    order: {
-      get() {
-        return this.category.order
-      },
-      set(value) {
-        this.updateSingle({
-          order: value
-        })
-      }
-    },
-    template: {
-      get() {
-        return this.category.template
-      },
-      set(value) {
-        this.updateSingle({
-          template: value
-        })
-      }
     }
   },
   created() {
@@ -67,7 +49,23 @@ export default {
     this.unbindSingle()
   },
   methods: {
-    ...mapActions('categories', ['bindSingle', 'unbindSingle', 'updateSingle'])
+    ...mapActions('categories', ['bindSingle', 'unbindSingle', 'saveSingle']),
+    ...mapMutations('categories', ['updateSingle']),
+    goBack() {
+      this.$router.back()
+    },
+    async saveCategory() {
+      this.isSaving = true
+      await this.saveSingle()
+      this.isSaving = false
+    },
+    async deleteCategory() {
+      this.isSaving = true
+      this.updateSingle({ deleted: true })
+      await this.saveSingle()
+      this.isSaving = false
+      this.$router.replace('/admin/categories')
+    }
   }
 }
 </script>
