@@ -42,8 +42,8 @@ export default {
       return this.$route.params.category_id
     }
   },
-  created() {
-    this.bindSingle(this.categoryId)
+  async created() {
+    await this.bindSingle(this.categoryId)
   },
   destroyed() {
     this.unbindSingle()
