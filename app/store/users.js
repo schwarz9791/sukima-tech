@@ -3,8 +3,7 @@ import firebase from '@/plugins/firebase'
 const db = firebase.firestore()
 
 export const state = () => ({
-  user: null,
-  token: null
+  user: null
 })
 
 export const getters = {
@@ -12,29 +11,28 @@ export const getters = {
     return state.user
   },
   token(state) {
-    return state.token
+    return state.user && state.user.token ? state.user.token : null
   }
 }
 
 export const actions = {
   async user({ commit }, payload) {
     if (payload && payload.uid) {
-      await db
-        .collection('users')
-        .doc(payload.uid)
-        .set({
-          displayName: payload.displayName,
-          email: payload.email,
-          emailVerified: payload.emailVerified,
-          phoneNumber: payload.phoneNumber,
-          photoURL: payload.photoURL
-        })
-        .then(() => {
-          commit('user', payload)
-        })
-        .catch(error => {
-          console.error('Error writing document: ', error)
-        })
+      try {
+        await db
+          .collection('users')
+          .doc(payload.uid)
+          .set({
+            displayName: payload.displayName,
+            email: payload.email,
+            emailVerified: payload.emailVerified,
+            phoneNumber: payload.phoneNumber,
+            photoURL: payload.photoURL
+          })
+        commit('user', payload)
+      } catch (error) {
+        console.error('Error writing document: ', error)
+      }
     } else {
       commit('user', null)
     }
@@ -46,20 +44,18 @@ export const actions = {
     try {
       const user = result.user
       if (!!user && user.uid) {
-        await db
+        const doc = await db
           .collection('users')
           .doc(user.uid)
           .get()
-          .then(doc => {
-            if (doc.exists) {
-              const token = result.credential.accessToken
-              commit('token', token)
-              commit('user', user)
-              if (next) this.$router.push(next)
-            } else {
-              throw new Error('Permission denied.')
-            }
-          })
+        if (doc.exists) {
+          const token = result.credential.accessToken
+          commit('user', user)
+          commit('token', token)
+          if (next) this.$router.push(next)
+        } else {
+          throw new Error('Permission denied.')
+        }
       }
     } catch (error) {
       console.error(error.message)
@@ -76,13 +72,14 @@ export const mutations = {
         email: payload.email,
         emailVerified: payload.emailVerified,
         phoneNumber: payload.phoneNumber,
-        photoURL: payload.photoURL
+        photoURL: payload.photoURL,
+        token: null
       }
     } else {
       state.user = null
     }
   },
   token(state, payload) {
-    state.token = payload
+    state.user.token = payload
   }
 }
