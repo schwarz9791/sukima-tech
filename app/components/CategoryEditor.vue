@@ -34,10 +34,10 @@ export default {
     },
     order: {
       get() {
-        return this.category.order
+        return this.category.order ? this.category.order.toString() : 0
       },
       set(value) {
-        this.updateSingle({ order: value })
+        this.updateSingle({ order: parseInt(value || 0, 10) })
       }
     },
     template: {

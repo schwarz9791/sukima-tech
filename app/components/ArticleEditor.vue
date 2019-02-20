@@ -47,6 +47,14 @@ export default {
       set(value) {
         this.updateSingle({ body: value })
       }
+    },
+    deleted: {
+      get() {
+        return this.article.deleted
+      },
+      set(value) {
+        this.updateSingle({ deleted: value })
+      }
     }
   },
   methods: {
