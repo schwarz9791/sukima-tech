@@ -27,21 +27,36 @@ export default {
     }
   },
   computed: {
-    ...mapState('users', ['user'])
+    ...mapState('users', ['user']),
+    ...mapState('articles', ['articles']),
+    ...mapState('categories', ['categories'])
   },
-  created() {
+  async created() {
     const rd = this.$route.query.rd ? decodeURI(this.$route.query.rd) : null
-    this.getRedirectResult(rd)
-      .then(() => {
-        this.isLoading = false
-      })
-      .catch(error => {
-        console.info(error.message)
-        this.isLoading = false
-      })
+    try {
+      await this.getRedirectResult(rd)
+      this.isLoading = false
+      this.bindArticles()
+      this.bindCategories()
+    } catch (e) {
+      console.error(e.message)
+      this.isLoading = false
+    }
+  },
+  destoryed() {
+    this.unbindArticles()
+    this.unbindCategories()
   },
   methods: {
-    ...mapActions('auth', ['login', 'logout', 'getRedirectResult'])
+    ...mapActions('auth', ['login', 'logout', 'getRedirectResult']),
+    ...mapActions('articles', {
+      bindArticles: 'bind',
+      unbindArticles: 'unbind'
+    }),
+    ...mapActions('categories', {
+      bindCategories: 'bind',
+      unbindCategories: 'unbind'
+    })
   }
 }
 </script>
