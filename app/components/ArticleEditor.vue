@@ -1,5 +1,13 @@
 <template lang="pug">
   el-form(ref='article' :model='article')
+    el-form-item(label='category')
+      el-select(v-model='category')
+        el-option(
+          v-for='(category, index) in categories'
+          :key='index'
+          :label='category.name'
+          :value='category.id'
+        )
     el-form-item(label='title')
       el-input(v-model='title')
     el-form-item(label='description')
@@ -9,7 +17,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'ArticleEditor',
@@ -24,6 +32,15 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('categories', ['categories']),
+    category: {
+      get() {
+        return this.article.category
+      },
+      set(value) {
+        this.updateSingle({ category: value })
+      }
+    },
     title: {
       get() {
         return this.article.title
