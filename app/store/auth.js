@@ -3,9 +3,7 @@ import firebase from '@/plugins/firebase'
 export const actions = {
   async login() {
     try {
-      await firebase
-        .auth()
-        .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+      await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       const provider = new firebase.auth.GoogleAuthProvider()
       provider.setCustomParameters({ hd: 'sukima.tech' })
       await firebase.auth().signInWithRedirect(provider)
