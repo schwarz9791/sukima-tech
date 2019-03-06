@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'LoginPage',
@@ -34,7 +34,16 @@ export default {
   async created() {
     const rd = this.$route.query.rd ? decodeURI(this.$route.query.rd) : null
     try {
-      await this.getRedirectResult(rd)
+      const firebaseData = await this.$localForage.getItem(
+        `firebase:authUser:${process.env.FIREBASE_API_KEY}:[DEFAULT]`
+      )
+      if (firebaseData) {
+        this.setUser(firebaseData.value)
+        this.setToken(firebaseData.value.stsTokenManager.accessToken)
+        if (rd) this.$router.push(rd)
+      } else {
+        await this.getRedirectResult(rd)
+      }
       this.isLoading = false
       this.bindArticles()
       this.bindCategories()
@@ -56,7 +65,8 @@ export default {
     ...mapActions('categories', {
       bindCategories: 'bind',
       unbindCategories: 'unbind'
-    })
+    }),
+    ...mapMutations('users', { setUser: 'user', setToken: 'token' })
   }
 }
 </script>

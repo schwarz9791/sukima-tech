@@ -1,6 +1,7 @@
 const pkg = require('./package')
 const environment = process.env.NODE_ENV || 'development'
 const env = require(`./config/env.${environment}.js`)
+const localforage = require('@nuxtjs/localforage')
 
 module.exports = {
   mode: 'spa',
@@ -44,7 +45,15 @@ module.exports = {
   */
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    [
+      '@nuxtjs/localforage',
+      {
+        driver: localforage.INDEXEDDB,
+        name: 'firebaseLocalStorageDb',
+        storeName: 'firebaseLocalStorage'
+      }
+    ]
   ],
   /*
   ** Axios module configuration
