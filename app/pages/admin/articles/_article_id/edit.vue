@@ -7,6 +7,7 @@
       p edit article - {{ articleId }}
       article-editor(
         v-if='!isLoading'
+        ref='article'
         :id='articleId'
         :article='article'
       )
@@ -49,15 +50,38 @@ export default {
     this.unbindSingle()
   },
   methods: {
-    ...mapActions('articles', ['bindSingle', 'unbindSingle', 'saveSingle']),
+    ...mapActions('articles', [
+      'bindSingle',
+      'unbindSingle',
+      'saveSingle',
+      'uploadImage'
+    ]),
     ...mapMutations('articles', ['updateSingle']),
     goBack() {
       this.$router.back()
     },
+    // async handleUploadImage(file) {
+    //   try {
+    //     const response = await this.uploadImage(file.raw)
+    //     return response
+    //   } catch (e) {
+    //     console.error(e.message)
+    //   }
+    // },
     async saveArticle() {
-      this.isSaving = true
-      await this.saveSingle()
-      this.isSaving = false
+      try {
+        this.isSaving = true
+        if (this.article.image) {
+          const uploadedFile = await this.uploadImage(
+            this.$refs.article.$refs.upload.fileList[0].raw
+          )
+          this.article.image = uploadedFile
+        }
+        await this.saveSingle()
+        this.isSaving = false
+      } catch (e) {
+        console.error(e.message)
+      }
     },
     async deleteArticle() {
       this.isSaving = true

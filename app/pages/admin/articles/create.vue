@@ -1,7 +1,10 @@
 <template lang="pug">
   div
     p create article
-    article-editor(:article='article')
+    article-editor(
+      ref='article'
+      :article='article'
+    )
     el-button(@click='goBack()') Back
     el-button(type='primary' @click='saveArticle()' :disabled='isSaving')
       i.el-icon-loading(v-if='isSaving')
@@ -29,14 +32,27 @@ export default {
     this.clearSingle()
   },
   methods: {
-    ...mapActions('articles', ['bind', 'unbind', 'saveSingle']),
+    ...mapActions('articles', ['bind', 'unbind', 'saveSingle', 'uploadImage']),
     ...mapMutations('articles', ['updateSingle', 'clearSingle']),
     goBack() {
       this.$router.back()
     },
+    // async handleUploadImage(files) {
+    //   files.forEach(file => {
+    //     try {
+    //       this.uploadImage(file.raw)
+    //     } catch (e) {
+    //       console.log(e.message)
+    //     }
+    //   })
+    // },
     async saveArticle() {
       this.isSaving = true
       await this.bind()
+      const uploadedFile = await this.uploadImage(
+        this.$refs.article.$refs.upload.fileList[0].raw
+      )
+      this.article.image = uploadedFile
       const id = await this.saveSingle()
       await this.unbind()
       this.isSaving = false

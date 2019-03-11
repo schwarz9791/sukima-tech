@@ -16,18 +16,18 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'ArticlesPage',
   computed: {
-    ...mapGetters('articles', ['articles']),
+    ...mapState('articles', ['articles']),
     isLoading() {
       return !this.articles.length
     }
   },
-  created() {
-    this.bind()
+  async created() {
+    await this.bind()
   },
   destroyed() {
     this.unbind()

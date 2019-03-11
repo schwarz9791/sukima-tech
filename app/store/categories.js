@@ -16,15 +16,6 @@ export const state = () => ({
 })
 
 export const getters = {
-  categories(state) {
-    return state.categories
-      .filter(category => !category.deleted)
-      .sort((a, b) => {
-        if (a.order > b.order) return 1
-        if (a.order < b.order) return -1
-        return 0
-      })
-  },
   categoryById: state => id => {
     return state.categories.find(category => category._id === id)
   }
@@ -32,7 +23,10 @@ export const getters = {
 
 export const actions = {
   bind: firebaseAction(({ bindFirebaseRef }) => {
-    bindFirebaseRef('categories', categoriesRef)
+    bindFirebaseRef(
+      'categories',
+      categoriesRef.where('deleted', '==', false).orderBy('updated_at', 'desc')
+    )
   }),
   unbind: firebaseAction(({ unbindFirebaseRef }) => {
     unbindFirebaseRef('categories')
