@@ -56,26 +56,18 @@ export default {
       'saveSingle',
       'uploadImage'
     ]),
-    ...mapMutations('articles', ['updateSingle']),
+    ...mapMutations('articles', ['updateSingle', 'setImage']),
     goBack() {
       this.$router.back()
     },
-    // async handleUploadImage(file) {
-    //   try {
-    //     const response = await this.uploadImage(file.raw)
-    //     return response
-    //   } catch (e) {
-    //     console.error(e.message)
-    //   }
-    // },
     async saveArticle() {
       try {
         this.isSaving = true
-        if (this.article.image || this.$refs.article.$refs.upload) {
+        if (this.$refs.article.uploads.length) {
           const uploadedFile = await this.uploadImage(
-            this.$refs.article.$refs.upload.fileList[0].raw
+            this.$refs.article.fileList[0].raw
           )
-          this.article.image = uploadedFile
+          this.setImage({ image: _.cloneDeep(uploadedFile) })
         }
         await this.saveSingle()
         this.isSaving = false

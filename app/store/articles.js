@@ -83,6 +83,9 @@ export const mutations = {
       updated_at: null
     }
   },
+  setImage(state, { image }) {
+    Vue.set(state.article, 'image', image)
+  },
   removeImage(state) {
     Vue.delete(state.article, 'image')
   }

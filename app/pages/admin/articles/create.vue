@@ -33,26 +33,19 @@ export default {
   },
   methods: {
     ...mapActions('articles', ['bind', 'unbind', 'saveSingle', 'uploadImage']),
-    ...mapMutations('articles', ['updateSingle', 'clearSingle']),
+    ...mapMutations('articles', ['updateSingle', 'clearSingle', 'setImage']),
     goBack() {
       this.$router.back()
     },
-    // async handleUploadImage(files) {
-    //   files.forEach(file => {
-    //     try {
-    //       this.uploadImage(file.raw)
-    //     } catch (e) {
-    //       console.log(e.message)
-    //     }
-    //   })
-    // },
     async saveArticle() {
       this.isSaving = true
       await this.bind()
-      const uploadedFile = await this.uploadImage(
-        this.$refs.article.$refs.upload.fileList[0].raw
-      )
-      this.article.image = uploadedFile
+      if (this.$refs.article.uploads.length) {
+        const uploadedFile = await this.uploadImage(
+          this.$refs.article.fileList[0].raw
+        )
+        this.setImage({ image: _.cloneDeep(uploadedFile) })
+      }
       const id = await this.saveSingle()
       await this.unbind()
       this.isSaving = false

@@ -100,17 +100,22 @@ export default {
     },
     fileList: {
       get() {
-        return this.article && this.article.image
-          ? [this.article.image]
-          : this.uploads
+        return this.uploads.length
+          ? this.uploads
+          : this.article.image
+            ? [this.article.image]
+            : []
       }
     }
   },
+  destroyed() {
+    this.clearSingle()
+  },
   methods: {
     ...mapActions('articles', ['uploadImage']),
-    ...mapMutations('articles', ['updateSingle', 'removeImage']),
+    ...mapMutations('articles', ['updateSingle', 'clearSingle', 'removeImage']),
     handleAttachImage(file) {
-      this.uploads.push(file)
+      this.uploads.push(_.cloneDeep(file))
     },
     handlePreview(file) {
       this.previewImageUrl = file.url
@@ -119,7 +124,8 @@ export default {
     handleRemove(file) {
       if (this.article.image) {
         this.removeImage()
-      } else {
+      }
+      if (this.uploads.length) {
         this.uploads.pop()
       }
     }
@@ -135,6 +141,9 @@ export default {
   width 100%
   height 100%
   border none
+
+.el-upload-list__item-thumbnail
+  object-fit cover
 
 .isLimit
   .el-upload
