@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'ArticleEditor',
@@ -57,7 +57,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('categories', ['categories']),
+    ...mapState('categories', ['categories']),
     category: {
       get() {
         return this.article.category || ''

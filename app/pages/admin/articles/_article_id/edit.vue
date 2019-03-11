@@ -71,7 +71,7 @@ export default {
     async saveArticle() {
       try {
         this.isSaving = true
-        if (this.article.image) {
+        if (this.article.image || this.$refs.article.$refs.upload) {
           const uploadedFile = await this.uploadImage(
             this.$refs.article.$refs.upload.fileList[0].raw
           )

@@ -26,8 +26,8 @@ export default {
       return !this.articles.length
     }
   },
-  async created() {
-    await this.bind()
+  created() {
+    this.bind()
   },
   destroyed() {
     this.unbind()
