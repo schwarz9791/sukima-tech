@@ -142,8 +142,9 @@ export default {
   height 100%
   border none
 
-.el-upload-list__item-thumbnail
-  object-fit cover
+.el-upload-list
+  img
+    object-fit cover
 
 .isLimit
   .el-upload

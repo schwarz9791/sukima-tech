@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import firebase from '@/plugins/firebase'
 import { firebaseAction } from 'vuexfire'
+import md5 from 'js-md5'
 
 const db = firebase.firestore()
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp()
@@ -58,8 +59,14 @@ export const actions = {
   async uploadImage({ dispatch }, payload) {
     try {
       const storageRef = firebase.storage().ref()
-      const fileRef = storageRef.child(`images/${payload.name}`)
-      const response = await fileRef.put(payload)
+      const metadata = {
+        customMetadata: {
+          originalFilename: payload.name
+        }
+      }
+      const filename = md5(`payload.name--${new Date().toISOString()}`)
+      const fileRef = storageRef.child(`images/${filename}`)
+      const response = await fileRef.put(payload, metadata)
       const imageUrl = await storageRef
         .child(response.ref.fullPath)
         .getDownloadURL()
