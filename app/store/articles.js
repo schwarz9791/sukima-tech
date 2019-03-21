@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import firebase from '@/plugins/firebase'
 import { firebaseAction } from 'vuexfire'
 
@@ -16,18 +17,17 @@ export const state = () => ({
 })
 
 export const getters = {
-  articles(state) {
-    return state.articles.filter(article => !article.deleted).sort((a, b) => {
-      if (a.updated_at.toMillis() > b.updated_at.toMillis()) return 1
-      if (a.updated_at.toMillis() < b.updated_at.toMillis()) return -1
-      return 0
-    })
+  articleById: state => id => {
+    return state.articles.find(article => article.id === id)
   }
 }
 
 export const actions = {
   bind: firebaseAction(({ bindFirebaseRef }) => {
-    bindFirebaseRef('articles', articlesRef)
+    bindFirebaseRef(
+      'articles',
+      articlesRef.where('deleted', '==', false).orderBy('updated_at', 'desc')
+    )
   }),
   unbind: firebaseAction(({ unbindFirebaseRef }) => {
     unbindFirebaseRef('articles')
@@ -54,7 +54,25 @@ export const actions = {
       })
     }
     return response ? response.id : null
-  })
+  }),
+  async uploadImage({ dispatch }, payload) {
+    try {
+      const storageRef = firebase.storage().ref()
+      const fileRef = storageRef.child(`images/${payload.name}`)
+      const response = await fileRef.put(payload)
+      const imageUrl = await storageRef
+        .child(response.ref.fullPath)
+        .getDownloadURL()
+      return {
+        name: response.ref.name,
+        url: imageUrl,
+        bucket: response.ref.bucket,
+        path: response.ref.fullPath
+      }
+    } catch (e) {
+      console.error(e.message)
+    }
+  }
 }
 
 export const mutations = {
@@ -68,5 +86,11 @@ export const mutations = {
       created_at: null,
       updated_at: null
     }
+  },
+  setImage(state, { image }) {
+    Vue.set(state.article, 'image', image)
+  },
+  removeImage(state) {
+    Vue.delete(state.article, 'image')
   }
 }
