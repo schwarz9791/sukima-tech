@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'CategoriesPage',
   computed: {
-    ...mapGetters('categories', ['categories']),
+    ...mapState('categories', ['categories']),
     isLoading() {
       return !this.categories.length
     }
