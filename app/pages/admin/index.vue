@@ -34,16 +34,7 @@ export default {
   async created() {
     const rd = this.$route.query.rd ? decodeURI(this.$route.query.rd) : null
     try {
-      const firebaseData = await this.$localForage.getItem(
-        `firebase:authUser:${process.env.FIREBASE_API_KEY}:[DEFAULT]`
-      )
-      if (firebaseData) {
-        this.setUser(firebaseData.value)
-        this.setToken(firebaseData.value.stsTokenManager.accessToken)
-        if (rd) this.$router.push(rd)
-      } else {
-        await this.getRedirectResult(rd)
-      }
+      await this.getRedirectResult(rd)
       this.isLoading = false
       this.bindArticles()
       this.bindCategories()
