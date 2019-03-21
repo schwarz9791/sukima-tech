@@ -36,7 +36,7 @@ class FirebaseLocalStorageDB {
       }
 
       openReq.onblocked = event => {
-        reject(new Error("Don't connect indexedDB."))
+        reject(new Error('Fail to connect indexedDB.'))
       }
     })
   }
