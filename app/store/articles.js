@@ -16,7 +16,11 @@ export const state = () => ({
   }
 })
 
-export const getters = {}
+export const getters = {
+  articleById: state => id => {
+    return state.articles.find(article => article.id === id)
+  }
+}
 
 export const actions = {
   bind: firebaseAction(({ bindFirebaseRef }) => {

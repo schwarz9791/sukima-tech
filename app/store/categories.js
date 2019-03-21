@@ -17,7 +17,7 @@ export const state = () => ({
 
 export const getters = {
   categoryById: state => id => {
-    return state.categories.find(category => category._id === id)
+    return state.categories.find(category => category.id === id)
   }
 }
 
