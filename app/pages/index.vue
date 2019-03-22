@@ -1,6 +1,6 @@
 <template lang="pug">
   section.container
-    div
+    section.topView
       logo
       h1.title
         | SUKIMA TECHNOLOGY
@@ -22,43 +22,47 @@ export default {
 }
 </script>
 
-<style>
-.container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+<style lang='stylus' scoped>
+.container
+  width 100%
+  min-height 100vh
+  display flex
+  flex-wrap wrap
+  justify-content center
+  align-items center
+  text-align center
 
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 500;
-  font-size: 36px;
-  color: #35495e;
-  letter-spacing: 1px;
-  line-height: 1.75;
-}
+  .topView
+    flex-shrink 0
+    width 100%
 
-.subtitle {
-  font-weight: 300;
-  font-size: 24px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
+    .title
+      // font-family 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif
+      display block
+      font-weight 500
+      font-size 36px
+      color #35495e
+      letter-spacing 1px
+      line-height 1.75
 
-.description {
-  font-weight: 300;
-  font-size: 18px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
+    .subtitle
+      font-weight 300
+      font-size 24px
+      color #526488
+      word-spacing 5px
+      padding-bottom 15px
 
-.links {
-  padding-top: 15px;
-}
+    .description
+      font-weight 300
+      font-size 18px
+      color #526488
+      word-spacing 5px
+      padding-bottom 15px
+
+    .links
+      padding-top 15px
+
+  .categories
+    display flex
+    flex-wrap wrap
 </style>

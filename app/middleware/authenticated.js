@@ -1,4 +1,4 @@
-import FirebaseLocalStorageDB from '@/assets/FirebaseLocalStorageDB'
+import FirebaseLocalStorageDB from '@/assets/javascripts/FirebaseLocalStorageDB'
 
 export default async function(context) {
   try {
