@@ -8,16 +8,66 @@
         | ヒトとヒト、モノとモノ、ヒトとモノ
         br
         | スキマを繋ぐ技術
-      .description
+      //- .description
         | Now constructing...
+    section.categories
+      template(v-for='category in categories')
+        category-header(:title='category.name')
+        template(
+          v-for='article in articles.filter(article => article.category === category.id)'
+        )
+          article-preview(
+            :id='article.id'
+            :title='article.title'
+            :description='article.description'
+            :image='article.image'
+          )
+
 </template>
 
 <script>
+import { mapState, mapActions, mapMutations } from 'vuex'
 import Logo from '~/components/Logo.vue'
+import CategoryHeader from '~/components/CategoryHeader.vue'
+import ArticlePreview from '~/components/ArticlePreview.vue'
 
 export default {
   components: {
-    Logo
+    Logo,
+    CategoryHeader,
+    ArticlePreview
+  },
+  computed: {
+    ...mapState(['isLoading']),
+    ...mapState('categories', ['categories']),
+    ...mapState('articles', ['articles']),
+    isLoading() {
+      return !this.categories.length && this.articles.length
+    }
+  },
+  watch: {
+    isLoading(newValue, oldValue) {
+      if (newValue !== oldValue) this.updateLoading(newValue)
+    }
+  },
+  created() {
+    this.bindCategories()
+    this.bindArticles()
+  },
+  destroyed() {
+    this.unbindCategories()
+    this.unbindArticles()
+  },
+  methods: {
+    ...mapActions('categories', {
+      bindCategories: 'bind',
+      unbindCategories: 'unbind'
+    }),
+    ...mapActions('articles', {
+      bindArticles: 'bind',
+      unbindArticles: 'unbind'
+    }),
+    ...mapMutations(['updateLoading'])
   }
 }
 </script>
