@@ -13,7 +13,11 @@
     el-form-item(label='description')
       el-input(v-model='description')
     el-form-item(label='body')
-      el-input(v-model='body')
+      el-input(
+        v-model='body'
+        type='textarea'
+        :autosize='{ minRows: 5, maxRows: 10 }'
+      )
     el-form-item(label='image')
       el-upload(
         ref='upload'
@@ -60,7 +64,9 @@ export default {
     ...mapState('categories', ['categories']),
     category: {
       get() {
-        return this.article.category || ''
+        return this.article.category && this.categories
+          ? this.article.category
+          : { category: { name: null, id: null } }
       },
       set(value) {
         this.updateSingle({ category: value })
@@ -108,11 +114,16 @@ export default {
       }
     }
   },
+  created() {
+    this.bind()
+  },
   destroyed() {
+    this.unbind()
     this.clearSingle()
   },
   methods: {
     ...mapActions('articles', ['uploadImage']),
+    ...mapActions('categories', ['bind', 'unbind']),
     ...mapMutations('articles', ['updateSingle', 'clearSingle', 'removeImage']),
     handleAttachImage(file) {
       this.uploads.push(_.cloneDeep(file))

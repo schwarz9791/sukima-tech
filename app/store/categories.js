@@ -28,14 +28,16 @@ export const actions = {
       categoriesRef.where('deleted', '==', false).orderBy('updated_at', 'desc')
     )
   }),
-  unbind: firebaseAction(({ unbindFirebaseRef }) => {
+  unbind: firebaseAction(({ commit, unbindFirebaseRef }) => {
     unbindFirebaseRef('categories')
+    commit('clear')
   }),
   bindSingle: firebaseAction(({ bindFirebaseRef }, id) => {
     bindFirebaseRef('category', categoriesRef.doc(id))
   }),
-  unbindSingle: firebaseAction(({ unbindFirebaseRef }) => {
+  unbindSingle: firebaseAction(({ commit, unbindFirebaseRef }) => {
     unbindFirebaseRef('category')
+    commit('clearSingle')
   }),
   saveSingle: firebaseAction(async ({ state }) => {
     let response
@@ -59,6 +61,9 @@ export const actions = {
 export const mutations = {
   updateSingle(state, payload) {
     state.category = _.merge({}, state.category, payload)
+  },
+  clear(state) {
+    state.categories.splice(0, state.categories.length)
   },
   clearSingle(state) {
     state.category = {

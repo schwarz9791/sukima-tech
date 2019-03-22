@@ -30,14 +30,16 @@ export const actions = {
       articlesRef.where('deleted', '==', false).orderBy('updated_at', 'desc')
     )
   }),
-  unbind: firebaseAction(({ unbindFirebaseRef }) => {
+  unbind: firebaseAction(({ commit, unbindFirebaseRef }) => {
     unbindFirebaseRef('articles')
+    commit('clear')
   }),
   bindSingle: firebaseAction(({ bindFirebaseRef }, id) => {
     bindFirebaseRef('article', articlesRef.doc(id))
   }),
-  unbindSingle: firebaseAction(({ unbindFirebaseRef }) => {
+  unbindSingle: firebaseAction(({ commit, unbindFirebaseRef }) => {
     unbindFirebaseRef('article')
+    commit('clearSingle')
   }),
   saveSingle: firebaseAction(async ({ state }) => {
     let response
@@ -85,6 +87,9 @@ export const actions = {
 export const mutations = {
   updateSingle(state, payload) {
     state.article = _.merge({}, state.article, payload)
+  },
+  clear(state) {
+    state.articles.splice(0, state.articles.length)
   },
   clearSingle(state) {
     state.article = {

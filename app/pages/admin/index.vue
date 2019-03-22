@@ -1,8 +1,5 @@
 <template lang="pug">
-  section(
-    v-loading.fullscreen.lock='isLoading'
-    element-loading-text='Loading...'
-  )
+  section.container
     template(v-if='!!user')
       h3 Welcome!! {{ user.displayName }}
       ul
@@ -21,11 +18,6 @@ import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'LoginPage',
-  data() {
-    return {
-      isLoading: true
-    }
-  },
   computed: {
     ...mapState('users', ['user']),
     ...mapState('articles', ['articles']),
@@ -35,12 +27,12 @@ export default {
     const rd = this.$route.query.rd ? decodeURI(this.$route.query.rd) : null
     try {
       await this.getRedirectResult(rd)
-      this.isLoading = false
+      this.updateLoading(false)
       this.bindArticles()
       this.bindCategories()
     } catch (e) {
       console.error(e.message)
-      this.isLoading = false
+      this.updateLoading(false)
     }
   },
   destoryed() {
@@ -57,7 +49,8 @@ export default {
       bindCategories: 'bind',
       unbindCategories: 'unbind'
     }),
-    ...mapMutations('users', { setUser: 'user', setToken: 'token' })
+    ...mapMutations('users', { setUser: 'user', setToken: 'token' }),
+    ...mapMutations(['updateLoading'])
   }
 }
 </script>

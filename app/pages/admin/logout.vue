@@ -1,19 +1,12 @@
 <template lang="pug">
-  section(
-    v-loading.fullscreen.lock='isLoading'
-    element-loading-text='Loading...'
-  )
+  section.container
+    | Logging out...
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 
 export default {
-  data() {
-    return {
-      isLoading: true
-    }
-  },
   async mounted() {
     await this.logout()
     this.$router.replace('/admin')

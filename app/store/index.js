@@ -2,9 +2,13 @@ import { firebaseMutations } from 'vuexfire'
 import _ from 'lodash'
 
 export const state = () => ({
-  app: null
+  app: {},
+  isLoading: true
 })
 
 export const mutations = {
-  ...firebaseMutations
+  ...firebaseMutations,
+  updateLoading(state, loadingState) {
+    state.isLoading = loadingState
+  }
 }
