@@ -1,5 +1,5 @@
 <template lang="pug">
-  div
+  section.container
     p create category
     category-editor(:category='category')
     el-button(@click='goBack()') Back

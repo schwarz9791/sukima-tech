@@ -1,5 +1,5 @@
 <template lang="pug">
-  div
+  section.container
     p create article
     article-editor(
       ref='article'

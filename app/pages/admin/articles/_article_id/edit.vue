@@ -1,25 +1,21 @@
 <template lang="pug">
-  section(
-    v-loading.fullscreen.lock='isLoading'
-    element-loading-text='Loading...'
-  )
-    section
-      p edit article - {{ articleId }}
-      article-editor(
-        v-if='!isLoading'
-        ref='article'
-        :id='articleId'
-        :article='article'
-      )
-      el-button(@click='goBack()') Back
-      el-button(type='danger' @click='deleteArticle()' :disabled='isSaving')
-        i.el-icon-loading(v-if='isSaving')
-        | Remove
-      el-button(type='primary' @click='saveArticle()' :disabled='isSaving')
-        i.el-icon-loading(v-if='isSaving')
-        | Update
-      br
-      nuxt-link(to='/admin') Go admin top
+  section.container
+    p edit article - {{ articleId }}
+    article-editor(
+      v-if='!isLoading'
+      ref='article'
+      :id='articleId'
+      :article='article'
+    )
+    el-button(@click='goBack()') Back
+    el-button(type='danger' @click='deleteArticle()' :disabled='isSaving')
+      i.el-icon-loading(v-if='isSaving')
+      | Remove
+    el-button(type='primary' @click='saveArticle()' :disabled='isSaving')
+      i.el-icon-loading(v-if='isSaving')
+      | Update
+    br
+    nuxt-link(to='/admin') Go admin top
 </template>
 
 <script>
@@ -37,10 +33,15 @@ export default {
   computed: {
     ...mapState('articles', ['article']),
     isLoading() {
-      return !this.article
+      return !this.article || !this.article.id
     },
     articleId() {
       return this.$route.params.article_id
+    }
+  },
+  watch: {
+    isLoading(newValue, oldValue) {
+      if (newValue !== oldValue) this.updateLoading(newValue)
     }
   },
   async created() {
@@ -57,6 +58,7 @@ export default {
       'uploadImage'
     ]),
     ...mapMutations('articles', ['updateSingle', 'setImage']),
+    ...mapMutations(['updateLoading']),
     goBack() {
       this.$router.back()
     },
