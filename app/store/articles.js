@@ -39,7 +39,7 @@ export const actions = {
   }),
   unbindSingle: firebaseAction(({ commit, unbindFirebaseRef }) => {
     unbindFirebaseRef('article')
-    commit('updateSingle')
+    commit('clearSingle')
   }),
   saveSingle: firebaseAction(async ({ state }) => {
     let response
@@ -90,7 +90,6 @@ export const mutations = {
   },
   clear(state) {
     state.articles.splice(0, state.articles.length)
-    console.log(state.articles)
   },
   clearSingle(state) {
     state.article = {

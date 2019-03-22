@@ -13,15 +13,16 @@
     section.categories
       template(v-for='category in categories')
         category-header(:title='category.name')
-        template(
-          v-for='article in articles.filter(article => article.category === category.id)'
-        )
-          article-preview(
-            :id='article.id'
-            :title='article.title'
-            :description='article.description'
-            :image='article.image'
+        section.articles
+          template(
+            v-for='article in articles.filter(article => article.category === category.id)'
           )
+            article-preview(
+              :id='article.id'
+              :title='article.title'
+              :description='article.description'
+              :image='article.image'
+            )
 
 </template>
 
@@ -75,19 +76,21 @@ export default {
 <style lang='stylus' scoped>
 .container
   width 100%
+  max-width 1200px
   min-height 100vh
-  display flex
-  flex-wrap wrap
-  justify-content center
-  align-items center
-  text-align center
+  margin 0 auto
 
   .topView
-    flex-shrink 0
-    width 100%
+    display flex
+    flex-direction column
+    justify-content center
+    align-items center
+    height 80vh
+    min-height 720px
+    text-align center
 
     .title
-      // font-family 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif
+      font-family 'Muli', sans-serif
       display block
       font-weight 500
       font-size 36px
@@ -113,6 +116,12 @@ export default {
       padding-top 15px
 
   .categories
+    padding 1em
+    overflow hidden
+
+  .articles
     display flex
     flex-wrap wrap
+    margin-right -1em
+    margin-bottom 6em
 </style>
