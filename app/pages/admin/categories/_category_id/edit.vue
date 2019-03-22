@@ -1,24 +1,20 @@
 <template lang="pug">
-  section(
-    v-loading.fullscreen.lock='isLoading'
-    element-loading-text='Loading...'
-  )
-    section
-      p edit category - {{ categoryId }}
-      category-editor(
-        v-if='!isLoading'
-        :id='categoryId'
-        :category='category'
-      )
-      el-button(@click='goBack()') Back
-      el-button(type='danger' @click='deleteCategory()' :disabled='isSaving')
-        i.el-icon-loading(v-if='isSaving')
-        | Remove
-      el-button(type='primary' @click='saveCategory()' :disabled='isSaving')
-        i.el-icon-loading(v-if='isSaving')
-        | Update
-      br
-      nuxt-link(to='/admin') Go admin top
+  section.container
+    p edit category - {{ categoryId }}
+    category-editor(
+      v-if='!isLoading'
+      :id='categoryId'
+      :category='category'
+    )
+    el-button(@click='goBack()') Back
+    el-button(type='danger' @click='deleteCategory()' :disabled='isSaving')
+      i.el-icon-loading(v-if='isSaving')
+      | Remove
+    el-button(type='primary' @click='saveCategory()' :disabled='isSaving')
+      i.el-icon-loading(v-if='isSaving')
+      | Update
+    br
+    nuxt-link(to='/admin') Go admin top
 </template>
 
 <script>
@@ -36,10 +32,15 @@ export default {
   computed: {
     ...mapState('categories', ['category']),
     isLoading() {
-      return !this.category
+      return !this.category || !this.category.id
     },
     categoryId() {
       return this.$route.params.category_id
+    }
+  },
+  watch: {
+    isLoading(newValue, oldValue) {
+      if (newValue !== oldValue) this.updateLoading(newValue)
     }
   },
   async created() {
@@ -51,6 +52,7 @@ export default {
   methods: {
     ...mapActions('categories', ['bindSingle', 'unbindSingle', 'saveSingle']),
     ...mapMutations('categories', ['updateSingle']),
+    ...mapMutations(['updateLoading']),
     goBack() {
       this.$router.back()
     },
