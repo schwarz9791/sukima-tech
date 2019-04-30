@@ -8,21 +8,18 @@
         | ヒトとヒト、モノとモノ、ヒトとモノ
         br
         | スキマを繋ぐ技術
-      //- .description
-        | Now constructing...
-    section.categories
-      template(v-for='category in categories')
-        category-header(:title='category.name')
-        section.articles
-          template(
-            v-for='article in articles.filter(article => article.category === category.id)'
+    section.categories(v-for='category in categories')
+      category-header(:title='category.name')
+      section.articles
+        template(
+          v-for='article in articles.filter(article => article.category === category.id)'
+        )
+          article-preview(
+            :id='article.id'
+            :title='article.title'
+            :description='article.description'
+            :image='article.image'
           )
-            article-preview(
-              :id='article.id'
-              :title='article.title'
-              :description='article.description'
-              :image='article.image'
-            )
 
 </template>
 
@@ -38,11 +35,6 @@ export default {
     CategoryHeader,
     ArticlePreview
   },
-  data() {
-    return {
-      isLoading: true
-    }
-  },
   computed: {
     ...mapState(['isLoading']),
     ...mapState('categories', ['categories']),
@@ -56,7 +48,7 @@ export default {
   created() {
     this.bindCategories()
     this.bindArticles()
-    this.isLoading = false
+    this.updateLoading(false)
   },
   destroyed() {
     this.unbindCategories()
