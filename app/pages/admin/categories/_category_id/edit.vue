@@ -1,6 +1,6 @@
 <template lang="pug">
   section.container
-    el-care
+    el-card
       p edit category - {{ categoryId }}
       category-editor(
         v-if='!isLoading'
