@@ -43,7 +43,7 @@ export default {
 </script>
 
 <style lang='stylus' scoped>
-@import '../../../assets/styles/variables'
+@import '~assets/styles/variables'
 
 .container
   display flex
@@ -78,7 +78,7 @@ export default {
   padding 1em
 
   .title
-    font-size font-size-xlg
+    font-size $--font-size-xlg
 
   .body
     white-space pre-line

@@ -1,16 +1,19 @@
 <template lang="pug">
   section.container
-    template(v-if='!!user')
-      h3 Welcome!! {{ user.displayName }}
-      ul
-        li
-          nuxt-link(to='/admin/categories') Go to category list
-        li
-          nuxt-link(to='/admin/articles') Go to article list
-      button(@click='logout') Sign out
-    template(v-else)
-      p login
-      button(@click='login') Sign in with Google
+    el-row.height-100(type='flex' justify='center' align='middle')
+      el-col(:sm='24' :md='12')
+        el-card.text-center(v-if='!!user')
+          h3.mb-20 Welcome!! {{ user.displayName }}
+          ul
+            li
+              nuxt-link(to='/admin/categories') Go to category list
+            li
+              nuxt-link(to='/admin/articles') Go to article list
+          el-divider
+          el-button(@click='logout') Sign out
+        el-card.text-center(v-else)
+          h3.mb-20 login
+          el-button(@click='login') Sign in with Google
 </template>
 
 <script>

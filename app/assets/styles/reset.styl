@@ -9,22 +9,22 @@
   text-size-adjust 100%
 
 html
-  font-family font-family-default
-  font-size font-size-md
+  font-family $--font-family-default
+  font-size $--font-size-md
   font-weight normal
-  color color-text
+  color $--color-text
   height 100%
   /* フォントレンダリング設定: 1x解像度ではsubpixel、2x以上の解像度ではgrayscale */
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
 
 body, h1, h2, h3, h4, h5, h6, p, dl, dt, dd, ul, li, a, em, figure
-  font-family font-family-default
+  font-family $--font-family-default
   font-weight normal
   font-style normal
   word-wrap break-word
   overflow-wrap break-word
-  line-height line-height-default
+  line-height $--line-height-default
 
 li
   list-style-type none

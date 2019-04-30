@@ -38,13 +38,15 @@ export default {
     CategoryHeader,
     ArticlePreview
   },
+  data() {
+    return {
+      isLoading: true
+    }
+  },
   computed: {
     ...mapState(['isLoading']),
     ...mapState('categories', ['categories']),
-    ...mapState('articles', ['articles']),
-    isLoading() {
-      return !this.categories.length && this.articles.length
-    }
+    ...mapState('articles', ['articles'])
   },
   watch: {
     isLoading(newValue, oldValue) {
@@ -54,6 +56,7 @@ export default {
   created() {
     this.bindCategories()
     this.bindArticles()
+    this.isLoading = false
   },
   destroyed() {
     this.unbindCategories()

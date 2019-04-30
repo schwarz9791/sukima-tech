@@ -19,25 +19,25 @@
     "@firebase/firestore": "^0.9.3",
     "@firebase/storage": "^0.2.10",
     "@nuxtjs/axios": "^5.0.0",
-    "cross-env": "^5.2.0",
-    "element-ui": "^2.4.6",
+    "element-ui": "^2.8.0",
     "js-md5": "^0.7.3",
     "lodash": "^4.17.11",
     "nuxt": "^2.0.0",
-    "pug": "^2.0.3",
-    "pug-plain-loader": "^1.0.0",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.2",
     "vuexfire": "^3.0.0-alpha.14"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
+    "cross-env": "^5.2.0",
     "eslint": "^5.0.1",
     "eslint-config-prettier": "^3.1.0",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-prettier": "2.6.2",
     "eslint-plugin-vue": "^4.0.0",
     "nodemon": "^1.11.0",
-    "prettier": "1.14.3"
+    "prettier": "1.14.3",
+    "pug": "^2.0.3",
+    "pug-plain-loader": "^1.0.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2"
   }
 }

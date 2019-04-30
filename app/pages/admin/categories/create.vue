@@ -1,13 +1,18 @@
 <template lang="pug">
   section.container
-    p create category
-    category-editor(:category='category')
-    el-button(@click='goBack()') Back
-    el-button(type='primary' @click='saveCategory()' :disabled='isSaving')
-      i.el-icon-loading(v-if='isSaving')
-      | Create
-    br
-    nuxt-link(to='/admin') Go admin top
+    el-card
+      p create category
+      category-editor(
+        ref='category'
+        :category='category'
+      )
+      .text-right
+        el-button(@click='goBack()') Back
+        el-button(type='primary' @click='saveCategory()' :disabled='isSaving')
+          i.el-icon-loading(v-if='isSaving')
+          | Create
+    .mt-15
+      nuxt-link(to='/admin') Go admin top
 </template>
 
 <script>
@@ -27,8 +32,10 @@ export default {
   },
   created() {
     this.clearSingle()
+    this.updateLoading(false)
   },
   methods: {
+    ...mapMutations(['updateLoading']),
     ...mapActions('categories', ['bind', 'unbind', 'saveSingle']),
     ...mapMutations('categories', ['updateSingle', 'clearSingle']),
     goBack() {
