@@ -1,14 +1,15 @@
 <template lang="pug">
   section.container
     h3 article list
-    ul
+    ul.mt-20(v-if='articles.length')
       li(v-for='article in articles')
         nuxt-link(:to='`/admin/articles/${article.id}/edit`')
           | {{ article.title }}
-    br
-    nuxt-link(to='/admin/articles/create') Create
-    br
-    nuxt-link(to='/admin') Go admin top
+    div.emptyItems(v-else)
+      | No articles
+    el-divider
+    el-button(@click='goto("/admin")') Go admin top
+    el-button(@click='goto("/admin/articles/create")') Create
 </template>
 
 <script>
@@ -35,7 +36,10 @@ export default {
   },
   methods: {
     ...mapActions('articles', ['bind', 'unbind']),
-    ...mapMutations(['updateLoading'])
+    ...mapMutations(['updateLoading']),
+    goto(path) {
+      this.$router.push(path)
+    }
   }
 }
 </script>

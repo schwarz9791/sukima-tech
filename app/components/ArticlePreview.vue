@@ -47,7 +47,7 @@ export default {
 </script>
 
 <style lang='stylus' scoped>
-@import '../assets/styles/variables'
+@import '~assets/styles/variables'
 
 .article
   position relative
@@ -64,7 +64,7 @@ export default {
     margin-left 1em
 
   .title
-    font-size font-size-lg
+    font-size $--font-size-lg
     text-align center
     text-overflow ellipsis
     overflow hidden

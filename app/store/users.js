@@ -1,6 +1,9 @@
 import firebase from '@/plugins/firebase'
+import { firebaseAction } from 'vuexfire'
 
 const db = firebase.firestore()
+const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp()
+const usersRef = db.collection('users')
 
 export const state = () => ({
   user: null
@@ -40,27 +43,37 @@ export const actions = {
   token({ commit }, payload) {
     commit('token', payload)
   },
-  async authorizedUser({ commit }, { result, next }) {
+  async authorizedUser({ commit, dispatch }, { result, next }) {
     try {
       const user = result.user
       if (!!user && user.uid) {
-        const doc = await db
-          .collection('users')
-          .doc(user.uid)
-          .get()
+        const doc = await usersRef.doc(user.uid).get()
         if (doc.exists) {
           const token = result.credential.accessToken
           commit('user', user)
           commit('token', token)
           if (next) this.$router.push(next)
         } else {
-          throw new Error('Permission denied.')
+          const users = await usersRef.get()
+          if (!users.empty) {
+            throw new Error('Permission denied.')
+          } else {
+            commit('user', user)
+            dispatch('save')
+          }
         }
       }
     } catch (error) {
       console.error(error.message)
     }
-  }
+  },
+  save: firebaseAction(async ({ state }) => {
+    await usersRef.doc(state.user.uid).set({
+      ...state.user,
+      updated_at: serverTimestamp,
+      created_at: serverTimestamp
+    })
+  })
 }
 
 export const mutations = {
