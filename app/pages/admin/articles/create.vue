@@ -1,16 +1,18 @@
 <template lang="pug">
   section.container
-    p create article
-    article-editor(
-      ref='article'
-      :article='article'
-    )
-    el-button(@click='goBack()') Back
-    el-button(type='primary' @click='saveArticle()' :disabled='isSaving')
-      i.el-icon-loading(v-if='isSaving')
-      | Create
-    br
-    nuxt-link(to='/admin') Go admin top
+    el-card
+      p create article
+      article-editor(
+        ref='article'
+        :article='article'
+      )
+      .text-right
+        el-button(@click='goBack()') Back
+        el-button(type='primary' @click='saveArticle()' :disabled='isSaving')
+          i.el-icon-loading(v-if='isSaving')
+          | Create
+    .mt-15
+      nuxt-link(to='/admin') Go admin top
 </template>
 
 <script>
@@ -30,8 +32,10 @@ export default {
   },
   created() {
     this.clearSingle()
+    this.updateLoading(false)
   },
   methods: {
+    ...mapMutations(['updateLoading']),
     ...mapActions('articles', ['bind', 'unbind', 'saveSingle', 'uploadImage']),
     ...mapMutations('articles', ['updateSingle', 'clearSingle', 'setImage']),
     goBack() {

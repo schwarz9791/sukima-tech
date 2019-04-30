@@ -1,14 +1,15 @@
 <template lang="pug">
   section.container
     h3 category list
-    ul
+    ul.mt-20(v-if='categories.length')
       li(v-for='category in categories')
         nuxt-link(:to='`/admin/categories/${category.id}/edit`')
           | {{ category.name }}
-    br
-    nuxt-link(to='/admin/categories/create') Create
-    br
-    nuxt-link(to='/admin') Go admin top
+    div.emptyItems(v-else)
+      | No categories
+    el-divider
+    el-button(@click='goto("/admin")') Go admin top
+    el-button(@click='goto("/admin/categories/create")') Create
 </template>
 
 <script>
@@ -35,7 +36,10 @@ export default {
   },
   methods: {
     ...mapActions('categories', ['bind', 'unbind']),
-    ...mapMutations(['updateLoading'])
+    ...mapMutations(['updateLoading']),
+    goto(path) {
+      this.$router.push(path)
+    }
   }
 }
 </script>

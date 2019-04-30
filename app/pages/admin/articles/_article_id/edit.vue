@@ -1,21 +1,23 @@
 <template lang="pug">
   section.container
-    p edit article - {{ articleId }}
-    article-editor(
-      v-if='!isLoading'
-      ref='article'
-      :id='articleId'
-      :article='article'
-    )
-    el-button(@click='goBack()') Back
-    el-button(type='danger' @click='deleteArticle()' :disabled='isSaving')
-      i.el-icon-loading(v-if='isSaving')
-      | Remove
-    el-button(type='primary' @click='saveArticle()' :disabled='isSaving')
-      i.el-icon-loading(v-if='isSaving')
-      | Update
-    br
-    nuxt-link(to='/admin') Go admin top
+    el-card
+      p edit article - {{ articleId }}
+      article-editor(
+        v-if='!isLoading'
+        ref='article'
+        :id='articleId'
+        :article='article'
+      )
+      .text-right
+        el-button(@click='goBack()') Back
+        el-button(type='danger' @click='deleteArticle()' :disabled='isSaving')
+          i.el-icon-loading(v-if='isSaving')
+          | Remove
+        el-button(type='primary' @click='saveArticle()' :disabled='isSaving')
+          i.el-icon-loading(v-if='isSaving')
+          | Update
+    .mt-15
+      nuxt-link(to='/admin') Go admin top
 </template>
 
 <script>

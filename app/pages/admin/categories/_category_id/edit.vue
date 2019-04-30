@@ -1,20 +1,22 @@
 <template lang="pug">
   section.container
-    p edit category - {{ categoryId }}
-    category-editor(
-      v-if='!isLoading'
-      :id='categoryId'
-      :category='category'
-    )
-    el-button(@click='goBack()') Back
-    el-button(type='danger' @click='deleteCategory()' :disabled='isSaving')
-      i.el-icon-loading(v-if='isSaving')
-      | Remove
-    el-button(type='primary' @click='saveCategory()' :disabled='isSaving')
-      i.el-icon-loading(v-if='isSaving')
-      | Update
-    br
-    nuxt-link(to='/admin') Go admin top
+    el-care
+      p edit category - {{ categoryId }}
+      category-editor(
+        v-if='!isLoading'
+        :id='categoryId'
+        :category='category'
+      )
+      .text-right
+        el-button(@click='goBack()') Back
+        el-button(type='danger' @click='deleteCategory()' :disabled='isSaving')
+          i.el-icon-loading(v-if='isSaving')
+          | Remove
+        el-button(type='primary' @click='saveCategory()' :disabled='isSaving')
+          i.el-icon-loading(v-if='isSaving')
+          | Update
+    .mt-15
+      nuxt-link(to='/admin') Go admin top
 </template>
 
 <script>
