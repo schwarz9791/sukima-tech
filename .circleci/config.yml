@@ -53,7 +53,7 @@ jobs:
       - persist_to_workspace:
           root: ~/repo
           paths:
-            - dist
+            - functions/public
 
   build-prod:
     <<: *defaults
@@ -64,7 +64,7 @@ jobs:
       - persist_to_workspace:
           root: ~/repo
           paths:
-            - dist
+            - functions/public
 
   deploy-stg:
     <<: *defaults
