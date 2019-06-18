@@ -40,8 +40,9 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
+          name: Save npm Package Cache
           paths:
-            - ~/usr/local/lib/node_modules # location depends on npm version
+            - ~/functions/node_modules # location depends on npm version
           key: node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
       - persist_to_workspace:
           root: ~/repo
