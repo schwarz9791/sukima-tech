@@ -24,14 +24,26 @@ jobs:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            # lock ファイルが変更されると、より広範囲にマッチする 2 番目以降のパターンがキャッシュの復元に使われます
+            - node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - node-v1-{{ .Branch }}-
+            - node-v1-
       - run: yarn install
       - run: yarn add --dev firebase-tools
       - run: ln -s ./node_modules/.bin/firebase .
+      - run: cd functions
+      - run: npm install
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - save_cache:
+          paths:
+            - ~/usr/local/lib/node_modules # location depends on npm version
+          key: node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
       - persist_to_workspace:
           root: ~/repo
           paths:
