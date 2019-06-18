@@ -2,14 +2,14 @@ const functions = require('firebase-functions')
 const express = require('express')
 const basicAuth = require('basic-auth-connect')
 const path = require('path')
-const env = process.env
+const env = functions.config()
 
 const app = express()
 
 app.all(
   '/*',
   basicAuth((user, password) => {
-    return user === env.BASIC_AUTH_USER && password === env.BASIC_AUTH_PASS
+    return user === env.basic.auth.user && password === env.basic.auth.pass
   })
 )
 
