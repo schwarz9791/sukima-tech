@@ -1,4 +1,4 @@
-import { firebaseMutations } from 'vuexfire'
+import { vuexfireMutations } from 'vuexfire'
 import _ from 'lodash'
 
 export const state = () => ({
@@ -7,7 +7,7 @@ export const state = () => ({
 })
 
 export const mutations = {
-  ...firebaseMutations,
+  ...vuexfireMutations,
   updateLoading(state, loadingState) {
     state.isLoading = loadingState
   }

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import firebase from '@/plugins/firebase'
-import { firebaseAction } from 'vuexfire'
+import { firestoreAction } from 'vuexfire'
 import md5 from 'js-md5'
 
 const db = firebase.firestore()
@@ -24,24 +24,24 @@ export const getters = {
 }
 
 export const actions = {
-  bind: firebaseAction(({ bindFirebaseRef }) => {
-    bindFirebaseRef(
+  bind: firestoreAction(({ bindFirestoreRef }) => {
+    bindFirestoreRef(
       'articles',
       articlesRef.where('deleted', '==', false).orderBy('updated_at', 'desc')
     )
   }),
-  unbind: firebaseAction(({ commit, unbindFirebaseRef }) => {
-    unbindFirebaseRef('articles')
+  unbind: firestoreAction(({ commit, unbindFirestoreRef }) => {
+    unbindFirestoreRef('articles')
     commit('clear')
   }),
-  bindSingle: firebaseAction(({ bindFirebaseRef }, id) => {
-    bindFirebaseRef('article', articlesRef.doc(id))
+  bindSingle: firestoreAction(({ bindFirestoreRef }, id) => {
+    bindFirestoreRef('article', articlesRef.doc(id))
   }),
-  unbindSingle: firebaseAction(({ commit, unbindFirebaseRef }) => {
-    unbindFirebaseRef('article')
+  unbindSingle: firestoreAction(({ commit, unbindFirestoreRef }) => {
+    unbindFirestoreRef('article')
     commit('clearSingle')
   }),
-  saveSingle: firebaseAction(async ({ state }) => {
+  saveSingle: firestoreAction(async ({ state }) => {
     let response
     if (state.article.id) {
       response = await articlesRef.doc(state.article.id).set(state.article)

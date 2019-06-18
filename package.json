@@ -23,7 +23,7 @@
     "js-md5": "^0.7.3",
     "lodash": "^4.17.11",
     "nuxt": "^2.0.0",
-    "vuexfire": "^3.0.0-alpha.14"
+    "vuexfire": "^3.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",

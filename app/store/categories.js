@@ -1,5 +1,5 @@
 import firebase from '@/plugins/firebase'
-import { firebaseAction } from 'vuexfire'
+import { firestoreAction } from 'vuexfire'
 
 const db = firebase.firestore()
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp()
@@ -22,24 +22,24 @@ export const getters = {
 }
 
 export const actions = {
-  bind: firebaseAction(({ bindFirebaseRef }) => {
-    bindFirebaseRef(
+  bind: firestoreAction(({ bindFirestoreRef }) => {
+    bindFirestoreRef(
       'categories',
       categoriesRef.where('deleted', '==', false).orderBy('updated_at', 'desc')
     )
   }),
-  unbind: firebaseAction(({ commit, unbindFirebaseRef }) => {
-    unbindFirebaseRef('categories')
+  unbind: firestoreAction(({ commit, unbindFirestoreRef }) => {
+    unbindFirestoreRef('categories')
     commit('clear')
   }),
-  bindSingle: firebaseAction(({ bindFirebaseRef }, id) => {
-    bindFirebaseRef('category', categoriesRef.doc(id))
+  bindSingle: firestoreAction(({ bindFirestoreRef }, id) => {
+    bindFirestoreRef('category', categoriesRef.doc(id))
   }),
-  unbindSingle: firebaseAction(({ commit, unbindFirebaseRef }) => {
-    unbindFirebaseRef('category')
+  unbindSingle: firestoreAction(({ commit, unbindFirestoreRef }) => {
+    unbindFirestoreRef('category')
     commit('clearSingle')
   }),
-  saveSingle: firebaseAction(async ({ state }) => {
+  saveSingle: firestoreAction(async ({ state }) => {
     let response
     if (state.category.id) {
       response = await categoriesRef.doc(state.category.id).set(state.category)
