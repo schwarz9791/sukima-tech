@@ -27,7 +27,7 @@ jobs:
       - restore_cache:
           keys:
             # lock ファイルが変更されると、より広範囲にマッチする 2 番目以降のパターンがキャッシュの復元に使われます
-            - node-v1-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - node-v1-{{ .Branch }}-{{ checksum "./functions/package-lock.json" }}
             - node-v1-{{ .Branch }}-
             - node-v1-
       - run: yarn install
