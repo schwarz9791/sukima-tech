@@ -72,6 +72,7 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run: ./firebase use stg
+      - run: ./firebase functions:config:set basic.auth.user="$BASIC_AUTH_USER" basic.auth.pass="$BASIC_AUTH_PASS"
       - run: ./firebase deploy --token "$FIREBASE_STG_TOKEN"
 
   deploy-prod:
