@@ -73,5 +73,11 @@ module.exports = {
       }
     }
   },
+  /*
+  ** Generate configuration
+  */
+  generate: {
+    dir: 'functions/public'
+  },
   env: env
 }
