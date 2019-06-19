@@ -6,12 +6,13 @@ const env = functions.config()
 
 const app = express()
 
-app.all(
-  '/*',
-  basicAuth((user, password) => {
-    return user === env.basic.auth.user && password === env.basic.auth.pass
-  })
-)
+if (env.basic && env.basic.auth)
+  app.all(
+    '/*',
+    basicAuth((user, password) => {
+      return user === env.basic.auth.user && password === env.basic.auth.pass
+    })
+  )
 
 app.use(express.static(path.join(__dirname, '/public')))
 

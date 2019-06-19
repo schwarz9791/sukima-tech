@@ -93,7 +93,7 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - run: ./firebase use prod
-      - run: ./firebase deploy --token "$FIREBASE_TOKEN" --only firestore,storage,hosting
+      - run: ./firebase deploy --token "$FIREBASE_TOKEN"
 
 workflows:
   version: 2.1
