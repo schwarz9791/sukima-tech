@@ -1,5 +1,5 @@
 import firebase from '@/plugins/firebase'
-import { firebaseAction } from 'vuexfire'
+import { firestoreAction } from 'vuexfire'
 
 const db = firebase.firestore()
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp()
@@ -67,7 +67,7 @@ export const actions = {
       console.error(error.message)
     }
   },
-  save: firebaseAction(async ({ state }) => {
+  save: firestoreAction(async ({ state }) => {
     await usersRef.doc(state.user.uid).set({
       ...state.user,
       updated_at: serverTimestamp,
