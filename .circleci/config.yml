@@ -85,7 +85,7 @@ jobs:
           at: ~/repo
       - run: ./firebase use stg
       - run: ./firebase functions:config:set basic.auth.user="$BASIC_AUTH_USER" basic.auth.pass="$BASIC_AUTH_PASS"
-      - run: ./firebase deploy --token "$FIREBASE_STG_TOKEN"
+      - run: ./firebase deploy --token "$STG_FIREBASE_TOKEN"
 
   deploy-prod:
     <<: *defaults
