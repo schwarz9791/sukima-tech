@@ -1,6 +1,8 @@
 const pkg = require('./package')
 const environment = process.env.NODE_ENV || 'development'
-const env = require(`./config/env.${environment}.js`)
+if (environment === 'development') {
+  require('dotenv').config()
+}
 
 module.exports = {
   mode: 'spa',
@@ -51,7 +53,7 @@ module.exports = {
   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
-    baseURL: env.BASE_URL || 'https://stg-sukima-tech.firebaseio.com'
+    baseURL: process.env.BASE_URL || 'https://stg-sukima-tech.firebaseio.com'
   },
 
   /*
@@ -79,5 +81,25 @@ module.exports = {
   generate: {
     dir: 'functions/public'
   },
-  env: env
+  env:
+    environment === 'staging'
+      ? {
+          baseUrl: process.env.STG_FIREBASE_BASE_URL,
+          firebaseApiKey: process.env.STG_FIREBASE_API_KEY,
+          firebaseAuthDomain: process.env.STG_FIREBASE_AUTH_DOMAIN,
+          firebaseDatabaseUrl: process.env.STG_FIREBASE_DATABASE_URL,
+          firebaseProjectId: process.env.STG_FIREBASE_PROJECT_ID,
+          firebaseStorageBucket: process.env.STG_FIREBASE_STORAGE_BUCKET,
+          firebaseMessagingSenderId:
+            process.env.STG_FIREBASE_MESSAGING_SENDER_ID
+        }
+      : {
+          baseUrl: process.env.FIREBASE_BASE_URL,
+          firebaseApiKey: process.env.FIREBASE_API_KEY,
+          firebaseAuthDomain: process.env.FIREBASE_AUTH_DOMAIN,
+          firebaseDatabaseUrl: process.env.FIREBASE_DATABASE_URL,
+          firebaseProjectId: process.env.FIREBASE_PROJECT_ID,
+          firebaseStorageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+          firebaseMessagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID
+        }
 }
